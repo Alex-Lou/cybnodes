@@ -6,7 +6,7 @@
 
 Une petite librairie Python qui entoure ton LLM de **réseaux de capacités** (calcul exact, savoir, recherche web), et qui redit chaque résultat **dans la voix de ton modèle**.
 
-**[cybnodes.pages.dev](https://cybnodes.pages.dev)** · [GitHub](https://github.com/Alex-Lou/cybnodes) · MIT
+**[cybnodes.pages.dev](https://cybnodes.pages.dev)** / [GitHub](https://github.com/Alex-Lou/cybnodes) / MIT
 
 </div>
 
@@ -18,7 +18,7 @@ CybNodes est une **librairie Python** (`pip install cybnodes`, puis `import cybn
 
 L'idée : un LLM est génial pour *parler*, mauvais pour *garantir*. Il invente un calcul, hallucine une date, n'a pas l'actu. Plutôt que de grossir le modèle, CybNodes met devant lui des **réseaux**, chacun sait répondre de façon **exacte et vérifiable** à un type de question. Un **routeur** choisit le bon réseau ; un **tisseur** redit le résultat brut dans la voix de ton modèle pour garder son âme.
 
-> Conséquence : un petit modèle (qui tient sur ta machine) peut alimenter un système qui « pèse » bien plus lourd.
+> Conséquence : un petit modèle (qui tient sur ta machine) peut alimenter un système qui "pèse" bien plus lourd.
 
 ---
 
@@ -26,9 +26,9 @@ L'idée : un LLM est génial pour *parler*, mauvais pour *garantir*. Il invente 
 
 | Sans CybNodes | Avec CybNodes |
 |---|---|
-| « 47 × 38 ? » → le LLM tente, parfois faux | calcul **exact** (AST sûr), toujours juste |
-| « c'est quoi un X ? » → le LLM hallucine | réponse depuis **ton graphe de connaissances** |
-| « quoi de neuf sur Y ? » → données périmées | **recherche web** avec la source citée |
+| "47 × 38 ?" → le LLM tente, parfois faux | calcul **exact** (AST sûr), toujours juste |
+| "c'est quoi un X ?" → le LLM hallucine | réponse depuis **ton graphe de connaissances** |
+| "quoi de neuf sur Y ?" → données périmées | **recherche web** avec la source citée |
 | corriger un fait → ré-entraîner le modèle | éditer un **fichier**, zéro entraînement |
 
 Le savoir et les capacités vivent **hors du modèle**. Tu les corriges, tu les étends, sans toucher aux poids.
@@ -118,7 +118,7 @@ C'est tout. Le routeur essaie les réseaux ; si aucun ne répond, ton modèle re
 
 | Réseau | Ce qu'il fait | Vérifiable par |
 |---|---|---|
-| `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots « fois / plus / puissance »…), AST sûr, **zéro `eval`** | le calcul lui-même |
+| `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots "fois / plus / puissance"…), AST sûr, **zéro `eval`** | le calcul lui-même |
 | `SavoirNetwork` | **GraphRAG** : répond depuis un graphe de triplets `sujet-relation-objet` | le nœud du graphe |
 | `WebNetwork` | recherche d'actu via l'API **Brave Search** (clé `BRAVE_API_KEY`), cite la source | l'URL renvoyée |
 

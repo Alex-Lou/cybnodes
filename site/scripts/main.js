@@ -1,5 +1,5 @@
 /* ============================================================================
-   CybNodes — landing : animations légères et accessibles.
+   CybNodes : landing : animations légères et accessibles.
    1) révélation au scroll  2) copier le code  3) réseau de nœuds (hero)
    ============================================================================ */
 (function () {
