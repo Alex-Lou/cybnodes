@@ -6,6 +6,8 @@
 
 Une petite librairie Python qui entoure ton LLM de **réseaux de capacités** (calcul exact, savoir, recherche web), et qui redit chaque résultat **dans la voix de ton modèle**.
 
+**[cybnodes.pages.dev](https://cybnodes.pages.dev)** · [GitHub](https://github.com/Alex-Lou/cybnodes) · MIT
+
 </div>
 
 ---
