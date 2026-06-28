@@ -1,0 +1,113 @@
+/* ============================================================================
+   CybNodes : BASE : reset, layout, typographie, boutons, animations.
+   Consomme uniquement les tokens (tokens.css). Aucune valeur magique.
+   ============================================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--c-text);
+  background: var(--c-bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ---- Fond : grille cyberpunk + halo, fixés derrière tout ---- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(900px 500px at 75% -5%, rgba(0, 229, 255, .10), transparent 60%),
+    radial-gradient(800px 600px at 10% 110%, rgba(177, 77, 255, .10), transparent 60%),
+    var(--c-bg);
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--c-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-border) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 80%);
+  opacity: .25;
+}
+
+/* ---- Typographie ---- */
+h1, h2, h3 { line-height: var(--lh-tight); font-weight: 700; letter-spacing: -.02em; }
+h2 { font-size: var(--fs-xl); margin-bottom: var(--sp-4); }
+h3 { font-size: var(--fs-lg); margin-bottom: var(--sp-3); }
+p  { color: var(--c-text-dim); }
+
+a { color: var(--c-accent); text-decoration: none; transition: color var(--dur-fast) var(--ease); }
+a:hover { color: #7af0ff; }
+
+code, kbd, pre { font-family: var(--font-mono); }
+
+/* ---- Layout ---- */
+.container { width: min(100% - var(--gutter) * 2, var(--maxw)); margin-inline: auto; }
+.section { padding-block: var(--sp-24); }
+.section__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--c-accent);
+  text-transform: uppercase;
+  letter-spacing: .25em;
+  margin-bottom: var(--sp-3);
+}
+.section__lead { font-size: var(--fs-md); max-width: 62ch; }
+
+/* ---- Texte en dégradé néon ---- */
+.grad {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Boutons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  padding: .8em 1.4em;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn--primary { background: var(--grad-accent); color: #04121a; box-shadow: var(--glow-accent); }
+.btn--primary:hover { box-shadow: 0 0 28px rgba(0, 229, 255, .65); }
+.btn--ghost { background: var(--c-surface); color: var(--c-text); border-color: var(--c-border-lit); }
+.btn--ghost:hover { border-color: var(--c-accent); color: #7af0ff; }
+
+/* ---- Animations ---- */
+@keyframes reveal-up { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+@keyframes pulse-glow { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes line-sweep { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+
+.reveal { opacity: 0; }
+.reveal.is-in { animation: reveal-up var(--dur) var(--ease) forwards; }
+.reveal[data-delay="1"].is-in { animation-delay: .08s; }
+.reveal[data-delay="2"].is-in { animation-delay: .16s; }
+.reveal[data-delay="3"].is-in { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal { opacity: 1; }
+}
