@@ -16,6 +16,8 @@
 .nav__links { display: flex; gap: var(--sp-6); align-items: center; }
 .nav__links a { color: var(--c-text-dim); font-size: var(--fs-sm); font-family: var(--font-mono); }
 .nav__links a:hover { color: var(--c-accent); }
+.lang-toggle { background: none; border: 1px solid var(--c-border-lit); color: var(--c-text-dim); font-family: var(--font-mono); font-size: var(--fs-xs); border-radius: 7px; padding: .3em .65em; cursor: pointer; transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease); }
+.lang-toggle:hover { color: var(--c-accent); border-color: var(--c-accent); }
 @media (max-width: 720px) { .nav__links a:not(.btn) { display: none; } }
 
 /* ---- HERO ---- */

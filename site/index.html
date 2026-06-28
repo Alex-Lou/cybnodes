@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CybNodes : entoure ton LLM de circuits vérifiables</title>
-  <meta name="description" content="CybNodes : une librairie Python qui entoure ton modèle de réseaux de capacités (calcul exact, savoir, web) et redit chaque résultat dans sa voix. Model-agnostic, vérifiable, sans ré-entraîner." />
+  <title>CybNodes : surround your LLM with verifiable circuits</title>
+  <meta name="description" content="CybNodes: a small Python library that surrounds your model with capability networks (exact math, knowledge, web) and says each result in its own voice. Model-agnostic, verifiable, no retraining." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="CybNodes" />
-  <meta property="og:description" content="Entoure ton LLM de reseaux de capacites verifiables (calcul, savoir, web), et redit chaque resultat dans sa voix." />
+  <meta property="og:description" content="Surround your LLM with verifiable capability networks (math, knowledge, web), and say each result back in its voice." />
   <meta property="og:url" content="https://cybnodes.pages.dev" />
   <link rel="canonical" href="https://cybnodes.pages.dev" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <!-- Loup cyber, réutilisé (DRY) -->
+  <!-- Loup cyber, reutilise (DRY) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="wolf" viewBox="0 0 100 100">
       <path d="M50 70 L31 56 L25 33 L19 11 L41 29 L50 33 L59 29 L81 11 L75 33 L69 56 Z" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
@@ -33,9 +33,10 @@
   <nav class="nav">
     <span class="nav__brand"><svg style="color:var(--c-accent)"><use href="#wolf"/></svg> CybNodes</span>
     <span class="nav__links">
-      <a href="#quoi">Quoi</a>
-      <a href="#installer">Installer</a>
-      <a href="#reseaux">Réseaux</a>
+      <a href="#quoi" data-i18n="nav.what">Quoi</a>
+      <a href="#installer" data-i18n="nav.install">Installer</a>
+      <a href="#reseaux" data-i18n="nav.networks">Réseaux</a>
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Language">EN</button>
       <a class="btn btn--ghost" href="https://github.com/Alex-Lou/cybnodes" target="_blank" rel="noopener">GitHub ↗</a>
     </span>
   </nav>
@@ -45,12 +46,12 @@
     <canvas id="net-canvas" aria-hidden="true"></canvas>
     <div class="container">
       <svg class="hero__wolf" style="color:var(--c-accent)" aria-hidden="true"><use href="#wolf"/></svg>
-      <p class="hero__tag">circuit neuronal · model-agnostic</p>
+      <p class="hero__tag" data-i18n="hero.tag">circuit neuronal / model-agnostic</p>
       <h1 class="hero__title"><span class="grad">CybNodes</span></h1>
-      <p class="hero__lead">On n'alourdit pas le cerveau par force brute. On l'entoure de <strong>circuits structurés et vérifiables</strong>, et on redit chaque résultat dans la voix de ton modèle.</p>
+      <p class="hero__lead" data-i18n="hero.lead">On n'alourdit pas le cerveau par force brute. On l'entoure de <strong>circuits structurés et vérifiables</strong>, et on redit chaque résultat dans la voix de ton modèle.</p>
       <div class="hero__cta">
-        <a class="btn btn--primary" href="#installer">Installer →</a>
-        <a class="btn btn--ghost" href="https://github.com/Alex-Lou/cybnodes" target="_blank" rel="noopener">Voir le code</a>
+        <a class="btn btn--primary" href="#installer" data-i18n="hero.cta1">Installer →</a>
+        <a class="btn btn--ghost" href="https://github.com/Alex-Lou/cybnodes" target="_blank" rel="noopener" data-i18n="hero.cta2">Voir le code</a>
       </div>
       <div class="hero__pip"><span>$</span> <code>pip install cybnodes</code></div>
     </div>
@@ -61,25 +62,25 @@
     <section id="quoi" class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// c'est quoi</p>
-          <h2>Une <span class="grad">librairie Python</span>, pas une boîte noire</h2>
-          <p class="section__lead">`pip install cybnodes`, puis `import cybnodes`. Pas une app, pas un service à héberger : une brique que tu branches <strong>autour de ton propre modèle</strong>. Un LLM est génial pour parler, mauvais pour garantir. CybNodes met devant lui des réseaux qui répondent de façon exacte et vérifiable.</p>
+          <p class="section__eyebrow" data-i18n="quoi.eyebrow">// c'est quoi</p>
+          <h2 data-i18n="quoi.h2">Une <span class="grad">librairie Python</span>, pas une boîte noire</h2>
+          <p class="section__lead" data-i18n="quoi.lead"><code>pip install cybnodes</code>, puis <code>import cybnodes</code>. Pas une app, pas un service à héberger : une brique que tu branches <strong>autour de ton propre modèle</strong>. Un LLM est génial pour parler, mauvais pour garantir. CybNodes met devant lui des réseaux qui répondent de façon exacte et vérifiable.</p>
         </div>
         <div class="grid grid--3">
           <article class="card reveal" data-delay="1">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 3v18M3 9h5M3 15h5"/></svg>
-            <h3>Librairie</h3>
-            <p>Du Python pur, zéro dépendance obligatoire. Tu l'importes et tu composes.</p>
+            <h3 data-i18n="card.lib.h">Librairie</h3>
+            <p data-i18n="card.lib.p">Du Python pur, zéro dépendance obligatoire. Tu l'importes et tu composes.</p>
           </article>
           <article class="card reveal" data-delay="2">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
-            <h3>Model-agnostic</h3>
-            <p>Tu apportes ton LLM (ollama, API, local…). CybNodes apporte les circuits.</p>
+            <h3 data-i18n="card.agn.h">Model-agnostic</h3>
+            <p data-i18n="card.agn.p">Tu apportes ton LLM (ollama, API, local…). CybNodes apporte les circuits.</p>
           </article>
           <article class="card reveal" data-delay="3">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-            <h3>Vérifiable</h3>
-            <p>Chaque réseau renvoie une réponse traçable : calcul exact, nœud de graphe, source web.</p>
+            <h3 data-i18n="card.ver.h">Vérifiable</h3>
+            <p data-i18n="card.ver.p">Chaque réseau renvoie une réponse traçable : calcul exact, nœud de graphe, source web.</p>
           </article>
         </div>
       </div>
@@ -91,55 +92,55 @@
     <section class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// pourquoi</p>
-          <h2>Le savoir vit <span class="grad">hors</span> du modèle</h2>
-          <p class="section__lead">Corriger un fait ne demande plus de ré-entraîner : tu édites un fichier.</p>
+          <p class="section__eyebrow" data-i18n="why.eyebrow">// pourquoi</p>
+          <h2 data-i18n="why.h2">Le savoir vit <span class="grad">hors</span> du modèle</h2>
+          <p class="section__lead" data-i18n="why.lead">Corriger un fait ne demande plus de ré-entraîner : tu édites un fichier.</p>
         </div>
         <table class="cmp reveal">
-          <thead><tr><th>Sans CybNodes</th><th>Avec CybNodes</th></tr></thead>
+          <thead><tr><th data-i18n="why.th1">Sans CybNodes</th><th data-i18n="why.th2">Avec CybNodes</th></tr></thead>
           <tbody>
-            <tr><td>« 47 × 38 ? » → le LLM tente, parfois faux</td><td class="v">calcul exact (AST sûr), toujours juste</td></tr>
-            <tr><td>« c'est quoi X ? » → le LLM hallucine</td><td class="v">réponse depuis ton graphe de connaissances</td></tr>
-            <tr><td>« quoi de neuf sur Y ? » → données périmées</td><td class="v">recherche web, avec la source citée</td></tr>
-            <tr><td>corriger un fait → ré-entraîner</td><td class="v">éditer un fichier, zéro entraînement</td></tr>
+            <tr><td data-i18n="why.r1a">"47 × 38 ?" → le LLM tente, parfois faux</td><td class="v" data-i18n="why.r1b">calcul exact (AST sûr), toujours juste</td></tr>
+            <tr><td data-i18n="why.r2a">"c'est quoi X ?" → le LLM hallucine</td><td class="v" data-i18n="why.r2b">réponse depuis ton graphe de connaissances</td></tr>
+            <tr><td data-i18n="why.r3a">"quoi de neuf sur Y ?" → données périmées</td><td class="v" data-i18n="why.r3b">recherche web, avec la source citée</td></tr>
+            <tr><td data-i18n="why.r4a">corriger un fait → ré-entraîner</td><td class="v" data-i18n="why.r4b">éditer un fichier, zéro entraînement</td></tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- INSTALLER & DÉMARRER -->
+    <!-- INSTALLER -->
     <section id="installer" class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// 60 secondes</p>
-          <h2>Installer & <span class="grad">démarrer</span></h2>
+          <p class="section__eyebrow" data-i18n="inst.eyebrow">// 60 secondes</p>
+          <h2 data-i18n="inst.h2">Installer & <span class="grad">démarrer</span></h2>
         </div>
         <div class="code reveal" style="margin-bottom:var(--sp-4)">
-          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">terminal</span><button class="code__copy" data-copy>copier</button></div>
-<pre><code><span class="tok-com"># bientôt sur PyPI : pip install cybnodes</span>
+          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">terminal</span><button class="code__copy" data-copy data-i18n="copy">copier</button></div>
+<pre><code><span class="tok-com" data-i18n="code.t1"># bientôt sur PyPI : pip install cybnodes</span>
 git clone https://github.com/Alex-Lou/cybnodes.git
 <span class="tok-key">cd</span> cybnodes && pip install -e .</code></pre>
         </div>
         <div class="code reveal">
-          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">quickstart.py</span><button class="code__copy" data-copy>copier</button></div>
-<pre><code><span class="tok-com"># 1. Tu apportes TON modèle : n'importe quel callable</span>
+          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">quickstart.py</span><button class="code__copy" data-copy data-i18n="copy">copier</button></div>
+<pre><code><span class="tok-com" data-i18n="code.q1"># 1. Tu apportes TON modèle, n'importe quel callable</span>
 <span class="tok-key">from</span> cybnodes <span class="tok-key">import</span> CybNodes, Persona
 <span class="tok-key">from</span> cybnodes.networks <span class="tok-key">import</span> CalculNetwork, SavoirNetwork
 
-<span class="tok-key">def</span> <span class="tok-fn">mon_llm</span>(question, context):
-    <span class="tok-key">return</span> appelle_mon_modele(question, context)  <span class="tok-com"># -> str</span>
+<span class="tok-key">def</span> <span class="tok-fn">my_llm</span>(question, context):
+    <span class="tok-key">return</span> call_my_model(question, context)  <span class="tok-com"># -> str</span>
 
-<span class="tok-com"># 2. Tu l'entoures de réseaux</span>
+<span class="tok-com" data-i18n="code.q2"># 2. Tu l'entoures de réseaux</span>
 cyb = <span class="tok-fn">CybNodes</span>(
-    conductor=mon_llm,
-    networks=[<span class="tok-fn">CalculNetwork</span>(), <span class="tok-fn">SavoirNetwork</span>(graph_path=<span class="tok-str">"graphe.json"</span>)],
-    persona=<span class="tok-fn">Persona</span>(name=<span class="tok-str">"Aria"</span>, templates={<span class="tok-str">"calcul"</span>: [<span class="tok-str">"Voilà : {value} ✦"</span>]}),
+    conductor=my_llm,
+    networks=[<span class="tok-fn">CalculNetwork</span>(), <span class="tok-fn">SavoirNetwork</span>(graph_path=<span class="tok-str">"graph.json"</span>)],
+    persona=<span class="tok-fn">Persona</span>(name=<span class="tok-str">"Aria"</span>, templates={<span class="tok-str">"calcul"</span>: [<span class="tok-str">"{value} ✦"</span>]}),
 )
 
-<span class="tok-com"># 3. Tu demandes</span>
-cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"combien font 47 x 38 ?"</span>)  <span class="tok-com"># -> "Voilà : 47 x 38 = 1786 ✦"  (exact)</span>
-cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"c'est quoi un chat ?"</span>)    <span class="tok-com"># -> depuis ton graphe, dans la voix d'Aria</span>
-cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"écris un haïku"</span>)         <span class="tok-com"># -> aucun réseau -> ton modèle répond</span></code></pre>
+<span class="tok-com" data-i18n="code.q3"># 3. Tu demandes</span>
+cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"47 x 38 ?"</span>)         <span class="tok-com" data-i18n="code.q4"># -> exact, jamais faux</span>
+cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"what is a cat?"</span>)    <span class="tok-com" data-i18n="code.q5"># -> depuis ton graphe, voix d'Aria</span>
+cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>)     <span class="tok-com" data-i18n="code.q6"># -> aucun réseau -> ton modèle répond</span></code></pre>
         </div>
       </div>
     </section>
@@ -150,48 +151,48 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"écris un haïku"</sp
     <section class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// architecture</p>
-          <h2>Les <span class="grad">5 couches</span></h2>
+          <p class="section__eyebrow" data-i18n="arch.eyebrow">// architecture</p>
+          <h2 data-i18n="arch.h2">Les <span class="grad">5 couches</span></h2>
         </div>
         <div class="arch reveal">
-          <div class="layer"><span class="layer__n">1</span><div><strong>Le Conducteur</strong><span>ton modèle, sa voix, sa personnalité</span></div></div>
+          <div class="layer"><span class="layer__n">1</span><div><strong data-i18n="arch.l1t">Le Conducteur</strong><span data-i18n="arch.l1s">ton modèle, sa voix, sa personnalité</span></div></div>
           <div class="layer__arrow">↓</div>
-          <div class="layer"><span class="layer__n">2</span><div><strong>Le Routeur</strong><span>essaie les réseaux ; un réseau qui plante n'écroule rien</span></div></div>
+          <div class="layer"><span class="layer__n">2</span><div><strong data-i18n="arch.l2t">Le Routeur</strong><span data-i18n="arch.l2s">essaie les réseaux ; un réseau qui plante n'écroule rien</span></div></div>
           <div class="layer__arrow">↓</div>
-          <div class="layer"><span class="layer__n">3</span><div><strong>Les Réseaux</strong><span>une capacité chacun, indépendants (calcul, savoir, web…)</span></div></div>
+          <div class="layer"><span class="layer__n">3</span><div><strong data-i18n="arch.l3t">Les Réseaux</strong><span data-i18n="arch.l3s">une capacité chacun, indépendants (calcul, savoir, web…)</span></div></div>
           <div class="layer__arrow">↓</div>
-          <div class="layer"><span class="layer__n">4</span><div><strong>Le Tisseur</strong><span>redit le résultat brut dans la voix du conducteur</span></div></div>
+          <div class="layer"><span class="layer__n">4</span><div><strong data-i18n="arch.l4t">Le Tisseur</strong><span data-i18n="arch.l4s">redit le résultat brut dans la voix du conducteur</span></div></div>
           <div class="layer__arrow">↓</div>
-          <div class="layer"><span class="layer__n">5</span><div><strong>La Mémoire</strong><span>capte des faits sûrs sur l'utilisateur, backend pluggable</span></div></div>
+          <div class="layer"><span class="layer__n">5</span><div><strong data-i18n="arch.l5t">La Mémoire</strong><span data-i18n="arch.l5s">capte des faits sûrs sur l'utilisateur, backend pluggable</span></div></div>
         </div>
       </div>
     </section>
 
-    <!-- RÉSEAUX -->
+    <!-- RESEAUX -->
     <section id="reseaux" class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// les réseaux livrés</p>
-          <h2>Trois <span class="grad">circuits</span>, prêts à brancher</h2>
+          <p class="section__eyebrow" data-i18n="net.eyebrow">// les réseaux livrés</p>
+          <h2 data-i18n="net.h2">Trois <span class="grad">circuits</span>, prêts à brancher</h2>
         </div>
         <div class="grid grid--3">
           <article class="card reveal" data-delay="1">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M8 14h2M8 18h2M14 10h2v8h-2z"/></svg>
             <span class="card__tag">CalculNetwork</span>
-            <h3>Calcul exact</h3>
-            <p>Arithmétique sûre par AST (zéro <code>eval</code>). Symboles et mots (« fois », « puissance »…). Le LLM ne se trompe plus jamais sur un calcul.</p>
+            <h3 data-i18n="net.calc.h">Calcul exact</h3>
+            <p data-i18n="net.calc.p">Arithmétique sûre par AST (zéro <code>eval</code>). Symboles et mots ("fois", "puissance"…). Le LLM ne se trompe plus jamais sur un calcul.</p>
           </article>
           <article class="card reveal" data-delay="2">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6.5 7.5l4 8.5M17.5 7.5l-4 8.5M7 6h10"/></svg>
             <span class="card__tag">SavoirNetwork</span>
-            <h3>Savoir (GraphRAG)</h3>
-            <p>Répond depuis un graphe de triplets <code>sujet-relation-objet</code>. Tu corriges une connaissance en éditant le graphe, sans ré-entraîner.</p>
+            <h3 data-i18n="net.know.h">Savoir (GraphRAG)</h3>
+            <p data-i18n="net.know.p">Répond depuis un graphe de triplets <code>sujet-relation-objet</code>. Tu corriges une connaissance en éditant le graphe, sans ré-entraîner.</p>
           </article>
           <article class="card reveal" data-delay="3">
             <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
             <span class="card__tag">WebNetwork</span>
-            <h3>Recherche web</h3>
-            <p>Actualité via l'API Brave Search, avec la source citée. Honnête : « j'ai cherché et… ». Se tait proprement sans clé.</p>
+            <h3 data-i18n="net.web.h">Recherche web</h3>
+            <p data-i18n="net.web.p">Actualité via l'API Brave Search, avec la source citée. Honnête : "j'ai cherché et…". Se tait proprement sans clé.</p>
           </article>
         </div>
       </div>
@@ -199,27 +200,27 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"écris un haïku"</sp
 
     <div class="divider"></div>
 
-    <!-- ÉCRIS TON RÉSEAU -->
+    <!-- ECRIS TON RESEAU -->
     <section class="section">
       <div class="container">
         <div class="head reveal">
-          <p class="section__eyebrow">// extensible</p>
-          <h2>Écris <span class="grad">ton réseau</span> en 6 lignes</h2>
-          <p class="section__lead">Hérite de <code>Network</code>, renvoie un <code>Result</code> quand tu sais, sinon <code>None</code>, et la main passe.</p>
+          <p class="section__eyebrow" data-i18n="ext.eyebrow">// extensible</p>
+          <h2 data-i18n="ext.h2">Écris <span class="grad">ton réseau</span> en 6 lignes</h2>
+          <p class="section__lead" data-i18n="ext.lead">Hérite de <code>Network</code>, renvoie un <code>Result</code> quand tu sais, sinon <code>None</code>, et la main passe.</p>
         </div>
         <div class="code reveal">
-          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">meteo.py</span><button class="code__copy" data-copy>copier</button></div>
+          <div class="code__bar"><span class="code__dot"></span><span class="code__dot"></span><span class="code__dot"></span><span class="code__name">meteo.py</span><button class="code__copy" data-copy data-i18n="copy">copier</button></div>
 <pre><code><span class="tok-key">from</span> cybnodes <span class="tok-key">import</span> Network, Result
 
-<span class="tok-key">class</span> <span class="tok-fn">MeteoNetwork</span>(Network):
-    name = <span class="tok-str">"meteo"</span>
+<span class="tok-key">class</span> <span class="tok-fn">WeatherNetwork</span>(Network):
+    name = <span class="tok-str">"weather"</span>
     <span class="tok-key">def</span> <span class="tok-fn">match</span>(self, question):
-        <span class="tok-key">if</span> <span class="tok-str">"météo"</span> <span class="tok-key">not in</span> question.lower():
-            <span class="tok-key">return</span> <span class="tok-key">None</span>            <span class="tok-com"># pas mon rayon -> je rends la main</span>
-        data = appel_api_meteo(...)  <span class="tok-com"># un résultat VÉRIFIABLE</span>
-        <span class="tok-key">return</span> <span class="tok-fn">Result</span>(kind=<span class="tok-str">"meteo"</span>, text=<span class="tok-str">f"Il fait {data}°"</span>, source=<span class="tok-str">"api-météo"</span>)
+        <span class="tok-key">if</span> <span class="tok-str">"weather"</span> <span class="tok-key">not in</span> question.lower():
+            <span class="tok-key">return</span> <span class="tok-key">None</span>            <span class="tok-com" data-i18n="code.m1"># pas mon rayon -> je rends la main</span>
+        data = weather_api(...)      <span class="tok-com" data-i18n="code.m2"># un résultat VÉRIFIABLE</span>
+        <span class="tok-key">return</span> <span class="tok-fn">Result</span>(kind=<span class="tok-str">"weather"</span>, text=<span class="tok-str">f"{data}°"</span>, source=<span class="tok-str">"weather-api"</span>)
 
-cyb.<span class="tok-fn">add_network</span>(<span class="tok-fn">MeteoNetwork</span>())   <span class="tok-com"># branché. C'est tout.</span></code></pre>
+cyb.<span class="tok-fn">add_network</span>(<span class="tok-fn">WeatherNetwork</span>())  <span class="tok-com" data-i18n="code.m3"># branché. C'est tout.</span></code></pre>
         </div>
       </div>
     </section>
@@ -229,12 +230,12 @@ cyb.<span class="tok-fn">add_network</span>(<span class="tok-fn">MeteoNetwork</s
       <div class="container">
         <div class="grid grid--2">
           <article class="card reveal">
-            <h3 style="color:var(--c-ok)">Utilise-le quand…</h3>
-            <p>tu veux qu'un LLM réponde de façon <strong>exacte, vérifiable ou à jour</strong> sur certains sujets, tout en gardant sa voix, sans ré-entraîner.</p>
+            <h3 style="color:var(--c-ok)" data-i18n="when.use.h">Utilise-le quand…</h3>
+            <p data-i18n="when.use.p">tu veux qu'un LLM réponde de façon <strong>exacte, vérifiable ou à jour</strong> sur certains sujets, tout en gardant sa voix, sans ré-entraîner.</p>
           </article>
           <article class="card reveal" data-delay="1">
-            <h3 style="color:var(--c-text-faint)">Pas besoin quand…</h3>
-            <p>c'est du pur génératif libre (écriture, brainstorming). Là, ton modèle seul suffit, CybNodes lui laisse simplement la main.</p>
+            <h3 style="color:var(--c-text-faint)" data-i18n="when.no.h">Pas besoin quand…</h3>
+            <p data-i18n="when.no.p">c'est du pur génératif libre (écriture, brainstorming). Là, ton modèle seul suffit, CybNodes lui laisse simplement la main.</p>
           </article>
         </div>
       </div>
@@ -245,11 +246,12 @@ cyb.<span class="tok-fn">add_network</span>(<span class="tok-fn">MeteoNetwork</s
   <footer class="footer">
     <div class="container">
       <svg class="footer__wolf" aria-hidden="true"><use href="#wolf"/></svg>
-      <p><a href="https://github.com/Alex-Lou/cybnodes" target="_blank" rel="noopener">GitHub</a> · <a href="https://github.com/Alex-Lou/cybnodes#readme" target="_blank" rel="noopener">Documentation</a> · MIT</p>
-      <p class="footer__sign">Conçu par CybWu, né autour d'une petite IA, pensé pour entourer n'importe quel modèle. 🐺</p>
+      <p><a href="https://github.com/Alex-Lou/cybnodes" target="_blank" rel="noopener">GitHub</a> / <a href="https://github.com/Alex-Lou/cybnodes#readme" target="_blank" rel="noopener" data-i18n="footer.docs">Documentation</a> / MIT</p>
+      <p class="footer__sign" data-i18n="footer.sign">Conçu par CybWu, né autour d'une petite IA, pensé pour entourer n'importe quel modèle. 🐺</p>
     </div>
   </footer>
 
+  <script src="scripts/i18n.js"></script>
   <script src="scripts/main.js"></script>
 </body>
 </html>
