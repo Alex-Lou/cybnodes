@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cybnodes"
+version = "0.1.0"
+description = "Un petit conducteur a personnalite, entoure de reseaux de nodes par capacite. On n'alourdit pas le cerveau par force brute : on l'entoure de circuits structures et verifiables."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "CybWu" }]
+keywords = ["llm", "agent", "graphrag", "router", "neural-circuit", "framework"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["cybnodes*"]
