@@ -6,7 +6,9 @@
 
 Une petite librairie Python qui entoure ton LLM de **réseaux de capacités** (calcul exact, savoir, recherche web), et qui redit chaque résultat **dans la voix de ton modèle**.
 
-**[cybnodes.pages.dev](https://cybnodes.pages.dev)** / [GitHub](https://github.com/Alex-Lou/cybnodes) / MIT
+[![PyPI](https://img.shields.io/pypi/v/cybnodes)](https://pypi.org/project/cybnodes/)
+
+**[cybnodes.pages.dev](https://cybnodes.pages.dev)** / [GitHub](https://github.com/Alex-Lou/cybnodes) / [PyPI](https://pypi.org/project/cybnodes/) / MIT
 
 </div>
 
@@ -38,7 +40,7 @@ Le savoir et les capacités vivent **hors du modèle**. Tu les corriges, tu les 
 ## Installation
 
 ```bash
-pip install cybnodes          # bientôt sur PyPI
+pip install cybnodes
 # ou, depuis les sources :
 git clone https://github.com/Alex-Lou/cybnodes.git
 cd cybnodes && pip install -e .

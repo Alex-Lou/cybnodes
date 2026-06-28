@@ -38,7 +38,7 @@
     "inst.eyebrow": `// 60 seconds`,
     "inst.h2": `Install & <span class="grad">start</span>`,
     "copy": `copy`,
-    "code.t1": `# soon on PyPI: pip install cybnodes`,
+    "code.t1": `# or from source:`,
     "code.q1": `# 1. You bring YOUR model, any callable`,
     "code.q2": `# 2. You surround it with networks`,
     "code.q3": `# 3. You ask`,
