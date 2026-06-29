@@ -103,6 +103,7 @@
             <tr><td data-i18n="why.r2a">"c'est quoi X ?" → le LLM hallucine</td><td class="v" data-i18n="why.r2b">réponse depuis ton graphe de connaissances</td></tr>
             <tr><td data-i18n="why.r3a">"quoi de neuf sur Y ?" → données périmées</td><td class="v" data-i18n="why.r3b">recherche web, avec la source citée</td></tr>
             <tr><td data-i18n="why.r4a">corriger un fait → ré-entraîner</td><td class="v" data-i18n="why.r4b">éditer un fichier, zéro entraînement</td></tr>
+            <tr><td data-i18n="why.r5a">réseau pas sûr → réponse fausse avec aplomb</td><td class="v" data-i18n="why.r5b">il se tait sous le seuil, le modèle reprend (seuil réglable)</td></tr>
           </tbody>
         </table>
       </div>
@@ -158,7 +159,7 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
         <div class="arch reveal">
           <div class="layer"><span class="layer__n">1</span><div><strong data-i18n="arch.l1t">Le Conducteur</strong><span data-i18n="arch.l1s">ton modèle, sa voix, sa personnalité</span></div></div>
           <div class="layer__arrow">↓</div>
-          <div class="layer"><span class="layer__n">2</span><div><strong data-i18n="arch.l2t">Le Routeur</strong><span data-i18n="arch.l2s">essaie les réseaux ; un réseau qui plante n'écroule rien</span></div></div>
+          <div class="layer"><span class="layer__n">2</span><div><strong data-i18n="arch.l2t">Le Routeur</strong><span data-i18n="arch.l2s">essaie les réseaux ; il ne retient une réponse que si le réseau est sûr (seuil réglable), sinon il passe la main. Un réseau qui plante n'écroule rien.</span></div></div>
           <div class="layer__arrow">↓</div>
           <div class="layer"><span class="layer__n">3</span><div><strong data-i18n="arch.l3t">Les Réseaux</strong><span data-i18n="arch.l3s">une capacité chacun, indépendants (calcul, savoir, web…)</span></div></div>
           <div class="layer__arrow">↓</div>
@@ -175,6 +176,7 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
         <div class="head reveal">
           <p class="section__eyebrow" data-i18n="net.eyebrow">// les réseaux livrés</p>
           <h2 data-i18n="net.h2">Trois <span class="grad">circuits</span>, prêts à brancher</h2>
+          <p class="section__lead" data-i18n="net.lead">Règle commune : un réseau se tait dès qu'il doute. Les réseaux déterministes (calcul) rendent la main net ; les réseaux flous (savoir, web) notent leur confiance, et le routeur les écarte sous le seuil. Résultat : la réponse n'est jamais bancale, c'est le modèle qui reprend dans le doute.</p>
         </div>
         <div class="grid grid--3">
           <article class="card reveal" data-delay="1">

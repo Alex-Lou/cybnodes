@@ -13,7 +13,9 @@ class Result:
     - text     : reponse lisible (fallback si la persona n'a pas de gabarit pour ce kind).
     - data     : donnees structurees (champs nommes reutilisables par les gabarits).
     - source   : tracabilite -> rend la reponse VERIFIABLE (calcul exact, node du graphe, URL...).
-    - confidence : 0..1, pour qu'un routeur avance puisse arbitrer plus tard.
+    - confidence : 0..1, certitude du reseau. Le routeur ne retient le Result que si
+                   confidence >= son threshold (defaut 0.0 -> tout passe). Les reseaux flous
+                   (savoir, web) la graduent ; les deterministes restent a 1.0 (ou None).
     """
     kind: str
     text: str

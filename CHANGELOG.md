@@ -2,6 +2,17 @@
 
 Toutes les versions notables de CybNodes. Format inspiré de Keep a Changelog, versionnage SemVer.
 
+## [0.4.0]
+
+Le routeur sait désormais quand un réseau n'est pas sûr et passe la main proprement.
+
+### Ajouté
+- **Seuil de confiance** : `Router(networks, threshold=0.0)` et `CybNodes(..., threshold=...)`. Le routeur ne retient un `Result` que si sa `confidence` atteint le seuil (sinon il passe la main au réseau suivant, puis au modèle). Le champ `Result.confidence` (présent depuis 0.2.0) est maintenant honoré.
+- **Doctrine anti-embourbement** documentée dans le contrat `Network` : un réseau décline dès qu'il doute (None pour les réseaux déterministes comme le calcul, confidence basse pour les réseaux flous comme savoir/web). Mieux vaut laisser le modèle reprendre (honnête dans le doute) que livrer une réponse fausse avec aplomb.
+
+### Compatibilité
+- 100% rétrocompatible : `threshold=0.0` par défaut donne le comportement 0.3.0 inchangé. Tests verts : 8/8 (`test_router`, dont 3 nouveaux sur le seuil) + 9/9 (`test_cybnodes`).
+
 ## [0.3.0]
 
 Nouveau réseau : les **maths avancées** (ce qu'un petit modèle rate au-delà de l'arithmétique).

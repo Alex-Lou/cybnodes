@@ -34,6 +34,14 @@ class Network(ABC):
     sure/verifiable, sinon `None` (et la main passe au reseau suivant, puis au modele).
     Un reseau est sans etat partage : on peut l'ajouter ou le retirer sans casser les autres.
 
+    PRINCIPE ANTI-EMBOURBEMENT (le coeur du routage par paliers) : un reseau DECLINE des qu'il
+    n'est pas certain -- soit en renvoyant `None` (pas son domaine : le tout-ou-rien des reseaux
+    DETERMINISTES, ex. le calcul borne par son garde d'intention), soit en renvoyant un `Result`
+    de `confidence` basse (les reseaux FLOUS -- savoir par similarite, web -- graduent leur
+    certitude). Le routeur n'accepte un Result que si `confidence >= threshold` ; sous le seuil,
+    il passe la main. On prefere toujours laisser le modele reprendre (il repond avec aisance,
+    honnete dans le doute) plutot que livrer une reponse fausse avec aplomb.
+
     `manifest` (optionnel) declare ce que le reseau sait faire -> introspection et docs.
     """
 

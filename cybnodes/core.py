@@ -25,8 +25,9 @@ class CybNodes:
                  networks: Optional[List[Network]] = None,
                  persona: Optional[Persona] = None,
                  weaver: Optional[Weaver] = None,
-                 memory: Optional[Memory] = None):
-        self.router = Router(networks)
+                 memory: Optional[Memory] = None,
+                 threshold: float = 0.0):
+        self.router = Router(networks, threshold=threshold)
         self.weaver = weaver or Weaver(persona)
         self.memory = memory
         self.conductor = conductor

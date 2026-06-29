@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from cybnodes import CybNodes, Persona, Weaver  # noqa: E402
+from cybnodes import CybNodes, Network, Persona, Result, Weaver  # noqa: E402
 from cybnodes.networks import CalculNetwork, SavoirNetwork, WebNetwork  # noqa: E402
 
 GRAPH = [
@@ -102,6 +102,46 @@ def test_evidence_cite_surfaces_source():
     # et via un gabarit, {source} est placable finement
     wt = Weaver(Persona(templates={"savoir": ["{value} [{source}]"]}))
     assert "[graphe de connaissances : chat]" in wt.weave(r)
+
+
+class _FuzzyNet(Network):
+    """Reseau FLOU de test : matche toujours, mais avec une certitude GRADUEE (pour le seuil)."""
+    name = "fuzzy"
+
+    def __init__(self, conf):
+        self._conf = conf
+
+    def match(self, question):
+        return Result(kind="fuzzy", text="FLOU", confidence=self._conf)
+
+
+def test_threshold_default_zero_regression():
+    """threshold=0.0 (defaut) : tout Result non-None gagne, exactement comme avant le seuil."""
+    cyb = _cyb()  # calcul/savoir/web sont tous a confidence 1.0
+    assert cyb.route_only("combien font 7 x 8 ?").kind == "calcul"
+    assert cyb.route_only("c'est quoi un chat ?").kind == "savoir"
+    assert cyb.route_only("bonjour, comment ca va ?") is None
+
+
+def test_threshold_skips_low_confidence():
+    """Un Result sous le seuil est ignore -> le modele reprend la main (anti-embourbement)."""
+    # sans seuil : meme une confiance basse passe (comportement historique)
+    cyb0 = CybNodes(conductor=lambda q, c: "MODELE", networks=[_FuzzyNet(0.4)])
+    assert cyb0.route_only("x").kind == "fuzzy" and cyb0.ask("x") == "FLOU"
+    # seuil 0.6 : 0.4 < 0.6 -> on passe la main au conducteur
+    cyb1 = CybNodes(conductor=lambda q, c: "MODELE", networks=[_FuzzyNet(0.4)], threshold=0.6)
+    assert cyb1.route_only("x") is None and cyb1.ask("x") == "MODELE"
+    # confiance suffisante -> passe le seuil
+    cyb2 = CybNodes(conductor=lambda q, c: "MODELE", networks=[_FuzzyNet(0.9)], threshold=0.6)
+    assert cyb2.route_only("x").kind == "fuzzy"
+
+
+def test_threshold_falls_through_to_next_network():
+    """Un reseau sous le seuil ne BLOQUE pas : le routeur essaie le suivant (cascade)."""
+    cyb = CybNodes(conductor=lambda q, c: "MODELE",
+                   networks=[_FuzzyNet(0.3), _FuzzyNet(0.95)], threshold=0.6)
+    hit = cyb.route_only("x")
+    assert hit is not None and abs(hit.confidence - 0.95) < 1e-9
 
 
 if __name__ == "__main__":

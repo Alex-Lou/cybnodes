@@ -112,7 +112,7 @@ C'est tout. Le routeur essaie les réseaux ; si aucun ne répond, ton modèle re
 |---|---|---|
 | **Conducteur** | `conductor=` (ton callable) | ton modèle, sa voix/personnalité |
 | **Réseaux** | `Network` | une capacité chacun, indépendants |
-| **Routeur** | `Router` | choisit le réseau ; un réseau qui plante n'écroule rien |
+| **Routeur** | `Router` | choisit le réseau (seuil de confiance optionnel) ; un réseau qui plante n'écroule rien |
 | **Tisseur** | `Weaver` + `Persona` | redit le résultat brut dans la voix |
 | **Mémoire** | `Memory` | capte des faits sûrs sur l'utilisateur (backend pluggable) |
 
@@ -175,6 +175,20 @@ cyb.skills()   # -> [{'name': 'calcul', 'deterministic': True, 'needs_source': F
 
 **Évaluer le routeur.** Le routeur EST le produit : ce qui compte, c'est qu'il choisisse la bonne capacité, et que la réponse reste dans ce que la capacité a prouvé. `route_only(question)` renvoie la décision brute (sans modèle ni tissage) ; `tests/test_router.py` mesure ça sur des cas francs (calcul simple, calcul caché dans une phrase, info récente, fait connu, fait inconnu, conversation). Comme le routeur est à base de règles, son point faible est le **rappel** : un `match()` qui rate un cas le laisse filer au modèle (ainsi le mot "aujourd'hui" peut encore sur-déclencher le web). D'où les evals.
 
+**Le seuil de confiance (0.4.0).** Chaque `Result` porte une `confidence` (entre 0 et 1, défaut 1.0). Le routeur l'honore via un seuil : `Router(networks, threshold=0.6)` (ou `CybNodes(..., threshold=0.6)`). Un réseau déterministe (le calcul) décline en rendant `None` ; un réseau flou (savoir, web) peut répondre avec une confidence basse. Si cette confidence est sous le seuil, le routeur ne retient pas le résultat et passe la main au réseau suivant, puis au modèle. C'est la doctrine anti-embourbement : décliner quand on doute, plutôt que livrer une réponse fausse avec aplomb. Par défaut `threshold=0.0`, donc tout résultat passe et le comportement reste celui des versions précédentes.
+
+```python
+from cybnodes import CybNodes
+# en dessous de 0.6 de confiance, le réseau passe la main (au suivant, puis au modèle)
+cyb = CybNodes(conductor=mon_llm, networks=[...], threshold=0.6)
+```
+
+```python
+from cybnodes import Result
+# un réseau flou qui n'est pas sûr rend une confidence basse, plutôt que de bluffer
+return Result(kind="savoir", text="...", source="graphe", confidence=0.3)
+```
+
 ---
 
 ## Quand l'utiliser (et quand non)
@@ -204,10 +218,11 @@ Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python te
 - ✅ **Manifeste** : chaque réseau déclare sa capacité (`Manifest`, `cyb.skills()`)
 - ✅ **Router evals** : `route_only()` + un fichier de tests par catégorie
 - ✅ **Sécurité & gating (0.2.1)** : puissances bornées (anti-DoS), le calcul ne se déclenche plus sur une date ou une phrase, division par zéro honnête, cache du réseau web
+- ✅ **Routage par confiance (0.4.0)** : `Router(threshold=...)` honore `Result.confidence` ; sous le seuil, le réseau passe la main (au suivant, puis au modèle). Rétrocompatible : `threshold=0.0` par défaut
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 
-- Routeur d'intention par classifieur (plutôt qu'ordre fixe), arbitré par `Result.confidence` et le manifeste
+- Routeur d'intention par classifieur (plutôt qu'ordre fixe) ; l'arbitrage par `Result.confidence` et le seuil est désormais livré, le classifieur reste à faire
 - Précision du routeur : resserrer les intentions trop larges (ex. "aujourd'hui")
 - Réseaux code / langues / traduction
 - Backends de recherche additionnels
