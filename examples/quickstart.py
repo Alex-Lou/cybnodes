@@ -5,7 +5,7 @@ Montre les 3 chemins :
   - une question de SAVOIR  -> GraphRAG sur un petit graphe
   - autre chose             -> aucun réseau ne répond -> le conducteur (ton modèle)
 """
-from cybnodes import CybNodes, Persona
+from cybnodes import CybNodes, Persona, Weaver
 from cybnodes.networks import CalculNetwork, SavoirNetwork
 
 # Un petit graphe de connaissances (en vrai : charge un fichier via graph_path=...)
@@ -22,13 +22,14 @@ def mon_modele(question, context):
     return "(ton modèle répondrait ici, avec sa voix)"
 
 
+# cite=True -> la source (calcul exact, node du graphe, URL) remonte dans la réponse.
 cyb = CybNodes(
     conductor=mon_modele,
     networks=[CalculNetwork(), SavoirNetwork(triples=GRAPHE)],
-    persona=Persona(name="Aria", templates={
+    weaver=Weaver(Persona(name="Aria", templates={
         "calcul": ["Voilà : {value} ✦", "{value}, et c'est exact !"],
         "savoir": ["{value}"],
-    }),
+    }), cite=True),
 )
 
 if __name__ == "__main__":
@@ -40,3 +41,8 @@ if __name__ == "__main__":
     ]:
         print(f"\nQ: {question}")
         print(f"A: {cyb.ask(question)}")
+
+    # Introspection : ce que chaque réseau déclare savoir faire.
+    print("\nCapacités branchées :")
+    for s in cyb.skills():
+        print(f"  - {s['name']}: {s['answers']} (déterministe={s['deterministic']}, source={s['needs_source']})")

@@ -22,6 +22,8 @@ L'idée : un LLM est génial pour *parler*, mauvais pour *garantir*. Il invente 
 
 > Conséquence : un petit modèle (qui tient sur ta machine) peut alimenter un système qui "pèse" bien plus lourd.
 
+Pour le dire autrement : CybNodes n'est pas un mini-LangChain. C'est une petite **couche de fiabilité pour les petits modèles locaux**. Les petits modèles sont attachants ; la fiabilité vient de savoir *quand* le modèle doit arrêter de deviner et passer la main à un outil précis.
+
 ---
 
 ## Pourquoi
@@ -147,6 +149,33 @@ cyb.add_network(MeteoNetwork())               # branché. C'est tout.
 
 ---
 
+## Fiabilité : évidence, manifeste, evals
+
+**La source dans la réponse.** Chaque `Result` porte une **source** (le calcul exact, le node du graphe, l'URL). Par défaut elle reste disponible mais discrète ; avec `Weaver(cite=True)` (ou un gabarit qui place `{source}`), elle remonte dans la réponse finale. C'est ce qui rend un petit modèle *fiable* et pas seulement charmant.
+
+```python
+from cybnodes import CybNodes, Weaver, Persona
+cyb = CybNodes(conductor=mon_llm, networks=[...], weaver=Weaver(Persona(name="Aria"), cite=True))
+cyb.ask("c'est quoi un chat ?")   # -> "... (source : graphe de connaissances : chat)"
+```
+
+**Le manifeste.** Chaque réseau peut déclarer ce qu'il sait faire : utile pour la doc, le debug, et un routeur futur. Purement déclaratif (ça ne change pas `match()`).
+
+```python
+from cybnodes import Manifest
+
+class MeteoNetwork(Network):
+    name = "meteo"
+    manifest = Manifest(answers="la meteo d'une ville", deterministic=False, needs_source=True)
+    ...
+
+cyb.skills()   # -> [{'name': 'calcul', 'deterministic': True, 'needs_source': False, ...}, ...]
+```
+
+**Évaluer le routeur.** Le routeur EST le produit : ce qui compte, c'est qu'il choisisse la bonne capacité, et que la réponse reste dans ce que la capacité a prouvé. `route_only(question)` renvoie la décision brute (sans modèle ni tissage) ; `tests/test_router.py` mesure ça sur des cas francs (calcul simple, calcul caché dans une phrase, info récente, fait connu, fait inconnu, conversation). Comme le routeur est à base de règles, son point faible est le **rappel** : un `match()` qui rate un cas le laisse filer au modèle (ainsi le mot "aujourd'hui" peut encore sur-déclencher le web). D'où les evals.
+
+---
+
 ## Quand l'utiliser (et quand non)
 
 **Utilise CybNodes quand** tu veux qu'un LLM réponde de façon **exacte / vérifiable / à jour** sur certains types de questions, tout en gardant **sa voix**, sans ré-entraîner.
@@ -166,14 +195,18 @@ cyb.add_network(MeteoNetwork())               # branché. C'est tout.
 
 ## État du projet
 
-Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py`) :
+Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python tests/test_router.py`) :
 
 - ✅ Cœur (routeur, tisseur/persona, mémoire, conducteur model-agnostic)
 - ✅ `CalculNetwork`, `SavoirNetwork` (GraphRAG), `WebNetwork` (Brave)
+- ✅ **Évidence** : la source remonte dans la réponse (`Weaver(cite=True)` / `{source}`)
+- ✅ **Manifeste** : chaque réseau déclare sa capacité (`Manifest`, `cyb.skills()`)
+- ✅ **Router evals** : `route_only()` + un fichier de tests par catégorie
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 
-- Routeur d'intention par classifieur (plutôt qu'ordre fixe)
+- Routeur d'intention par classifieur (plutôt qu'ordre fixe), arbitré par `Result.confidence` et le manifeste
+- Précision du routeur : resserrer les intentions trop larges (ex. "aujourd'hui")
 - Réseaux code / langues / traduction
 - Backends de recherche additionnels
 
