@@ -22,4 +22,4 @@ from .router import Router
 from .weaver import Persona, Weaver
 
 __all__ = ["CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory"]
-__version__ = "0.2.0"
+__version__ = "0.2.1"
