@@ -37,12 +37,41 @@ _EXPR = re.compile(
     r"[-+]?\d[\d ]*(?:[.,]\d+)?(?:\s*(?:\*\*|[-+*/x×÷^%])\s*[-+]?\d[\d ]*(?:[.,]\d+)?)+"
 )
 
+# Gating d'INTENTION (ne pas calculer une date, une version, ou une phrase qui contient des chiffres).
+# On ne prend la main que sur un vrai calcul : indice explicite (combien/calcule/...) OU expression
+# isolee (quasi rien d'autre que des chiffres/operateurs). En cas de doute -> on rend la main au modele
+# (un faux negatif est benin ; un faux positif livre une reponse fausse avec aplomb).
+_CALC_CUE = re.compile(
+    r"\bcombien\b|\bcalcule[rz]?\b|[cç]a fait|[ée]gale?|r[ée]sultat|\bfont\b|\bcu[aá]nto\b", re.I)
+_DATE = re.compile(r"\b\d{1,2}[/.]\d{1,2}[/.]\d{2,4}\b|\b\d{4}-\d{1,2}-\d{1,2}\b")
+
+
+def _is_real_calc(question: str, work: str) -> bool:
+    if _DATE.search(question):                 # une date n'est pas un calcul
+        return False
+    if _CALC_CUE.search(question):
+        return True
+    body = re.sub(r"[0-9+\-*/x×÷^%=().,:;!?]", " ", work)   # ce qu'il reste hors chiffres/operateurs
+    return len([w for w in body.split() if len(w) >= 2]) <= 1
+
+
+def _guard_pow(base, exp):
+    # anti-DoS : les entiers Python sont illimites, une puissance non bornee bloque CPU+RAM.
+    if abs(exp) > 1000:
+        raise ValueError("exposant hors borne")
+    base_bits = base.bit_length() if isinstance(base, int) else 64
+    if base_bits * (abs(exp) or 1) > 10000:
+        raise ValueError("puissance trop grande")
+
 
 def _safe_eval(node):
     if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
         return node.value
     if isinstance(node, ast.BinOp) and type(node.op) in _OPS:
-        return _OPS[type(node.op)](_safe_eval(node.left), _safe_eval(node.right))
+        left, right = _safe_eval(node.left), _safe_eval(node.right)
+        if type(node.op) is ast.Pow:
+            _guard_pow(left, right)
+        return _OPS[type(node.op)](left, right)
     if isinstance(node, ast.UnaryOp) and type(node.op) in _OPS:
         return _OPS[type(node.op)](_safe_eval(node.operand))
     raise ValueError("expression non supportee")
@@ -70,11 +99,16 @@ class CalculNetwork(Network):
         m = _EXPR.search(work)
         if not m:
             return None
+        if not _is_real_calc(question or "", work):   # gating : vrai calcul, pas date/phrase deguisee
+            return None
         expr = _clean(m.group(0))
         if not re.search(r"\*\*|[-+*/%]", expr):  # garde-fou : un vrai operateur
             return None
         try:
             value = _safe_eval(ast.parse(expr, mode="eval").body)
+        except ZeroDivisionError:                 # honnete plutot que None (qui laisserait le LLM halluciner)
+            return Result(kind="calcul_erreur", text="Division par zero : impossible.",
+                          data={"expr": m.group(0).strip()}, source="calcul exact (AST)")
         except Exception:
             return None
         if isinstance(value, float):

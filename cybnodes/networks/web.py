@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import urllib.parse
 import urllib.request
 from typing import Callable, Optional
@@ -37,12 +38,24 @@ class WebNetwork(Network):
     )
 
     def __init__(self, api_key: Optional[str] = None, env_var: str = "BRAVE_API_KEY",
-                 max_results: int = 3, timeout: int = 8,
+                 max_results: int = 3, timeout: int = 8, cache_ttl: int = 900,
                  fetch: Optional[Callable[[str], dict]] = None):
         self.api_key = api_key or os.environ.get(env_var)
         self.max_results = max_results
         self.timeout = timeout
-        self._fetch = fetch or self._http  # injectable pour les tests
+        self.cache_ttl = cache_ttl          # secondes ; 0 = pas de cache
+        self._cache: dict = {}              # query -> (timestamp, data) : evite les appels (= $) redondants
+        self._fetch = fetch or self._http   # injectable pour les tests
+
+    def _cached_fetch(self, query: str) -> dict:
+        if self.cache_ttl > 0:
+            hit = self._cache.get(query)
+            if hit and (time.time() - hit[0]) < self.cache_ttl:
+                return hit[1]
+        data = self._fetch(query)
+        if self.cache_ttl > 0:
+            self._cache[query] = (time.time(), data)
+        return data
 
     def _http(self, query: str) -> dict:
         url = self.ENDPOINT + "?" + urllib.parse.urlencode({"q": query, "count": self.max_results})
@@ -60,7 +73,7 @@ class WebNetwork(Network):
         if not self.api_key:
             return None  # pas de cle -> on laisse le modele repondre (pas de fausse promesse)
         try:
-            data = self._fetch(q)
+            data = self._cached_fetch(q)
         except Exception:
             return None
         results = ((data or {}).get("web", {}) or {}).get("results", [])[:self.max_results]

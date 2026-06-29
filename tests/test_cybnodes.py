@@ -84,6 +84,35 @@ def test_network_failure_is_safe():
     assert cyb.ask("salut") == "ok"   # un reseau qui plante n'ecroule pas le circuit
 
 
+def test_calcul_gating_and_safety():
+    net = CalculNetwork()
+    # gating d'intention : pas de calcul sur une phrase emotionnelle ni une date
+    assert net.match("3+3 tu es belle") is None
+    assert net.match("on se voit le 12/05/2024") is None
+    # mais un vrai calcul passe (isole ou avec intention)
+    assert net.match("3+3").data["value"] == 6
+    assert net.match("combien font 12 / 4 ?").data["value"] == 3
+    # securite : pas de DoS exponentiel -> None (le modele reprend la main)
+    assert net.match("9**9**9") is None
+    assert net.match("2 ** 100000") is None
+    # division par zero : honnete, pas de None silencieux qui laisserait halluciner
+    r = net.match("5 / 0")
+    assert r is not None and "zero" in r.text.lower()
+
+
+def test_web_cache():
+    calls = {"n": 0}
+
+    def fake(q):
+        calls["n"] += 1
+        return {"web": {"results": [{"title": "X", "description": "desc", "url": "http://x"}]}}
+
+    net = WebNetwork(api_key="FAKE", fetch=fake)
+    net.match("cherche X")
+    net.match("cherche X")   # 2e fois identique -> cache, aucun 2e appel (= pas de $)
+    assert calls["n"] == 1
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:
