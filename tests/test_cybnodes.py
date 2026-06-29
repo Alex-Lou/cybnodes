@@ -136,6 +136,26 @@ def test_maths_network():
     assert net.match("j'aime les maths") is None
 
 
+def test_savoir_confidence():
+    net = SavoirNetwork(triples=GRAPH)
+    rich = net.match("c'est quoi un chat ?")      # 3 faits dans GRAPH
+    thin = net.match("c'est quoi le soleil ?")     # 1 seul fait
+    # les DEUX repondent (seuil 0 par defaut, rien ne change pour le routage de base)
+    assert rich is not None and thin is not None
+    # mais un sujet riche/specifique inspire plus de confiance qu'un fait unique
+    assert rich.confidence > thin.confidence
+    assert 0.0 < thin.confidence <= 1.0 and rich.confidence <= 1.0
+
+
+def test_web_confidence():
+    fake = {"web": {"results": [{"title": "X", "description": "un fait reel", "url": "http://x"}]}}
+    net = WebNetwork(api_key="FAKE", fetch=lambda q: fake)
+    strong = net.match("cherche des infos sur X")  # intention forte
+    weak = net.match("X aujourd'hui")               # intention faible (signal ambigu)
+    assert strong is not None and weak is not None  # les deux passent a seuil 0
+    assert strong.confidence > weak.confidence       # l'intention forte inspire plus confiance
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

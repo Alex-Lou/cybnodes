@@ -189,6 +189,17 @@ from cybnodes import Result
 return Result(kind="savoir", text="...", source="graphe", confidence=0.3)
 ```
 
+**Maintenant graduée pour de vrai (0.5.0).** En 0.4.0 le seuil était armé mais inerte : tous les réseaux renvoyaient `confidence=1.0`, donc rien ne tombait jamais sous le seuil. En 0.5.0, les deux réseaux flous notent leur propre confiance, ce qui rend le seuil utile en pratique. `SavoirNetwork` gradue selon la richesse et la spécificité du sujet (plusieurs faits et un mot plus long, donc moins ambigu, inspirent plus de confiance qu'un fait unique ou un mot court) ; `WebNetwork` gradue selon la force de l'intention (cherche / actualité = fort, "aujourd'hui" = faible) et la qualité du résultat (extrait présent, plusieurs hits). Les réseaux déterministes (calcul, maths) restent à 1.0. Un seuil bien placé écarte alors un savoir bâti sur un seul fait, ou une recherche web à intention faible, sans rien retirer du déclenchement.
+
+```python
+from cybnodes import CybNodes
+from cybnodes.networks import SavoirNetwork
+
+cyb = CybNodes(conductor=mon_llm, networks=[SavoirNetwork(graph_path="g.json")], threshold=0.85)
+# "c'est quoi un chat ?"   -> 3 faits dans le graphe -> confidence 0.9 -> passe (>= 0.85)
+# "c'est quoi le soleil ?" -> 1 seul fait            -> confidence 0.8 -> écarté (< 0.85), le modèle reprend la main
+```
+
 ---
 
 ## Quand l'utiliser (et quand non)
@@ -219,6 +230,7 @@ Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python te
 - ✅ **Router evals** : `route_only()` + un fichier de tests par catégorie
 - ✅ **Sécurité & gating (0.2.1)** : puissances bornées (anti-DoS), le calcul ne se déclenche plus sur une date ou une phrase, division par zéro honnête, cache du réseau web
 - ✅ **Routage par confiance (0.4.0)** : `Router(threshold=...)` honore `Result.confidence` ; sous le seuil, le réseau passe la main (au suivant, puis au modèle). Rétrocompatible : `threshold=0.0` par défaut
+- ✅ **Confiance graduée des réseaux flous (0.5.0)** : `SavoirNetwork` note selon la richesse / spécificité du sujet, `WebNetwork` selon la force de l'intention et la qualité du résultat ; le seuil de 0.4.0 devient donc utile en pratique. Déterministes (calcul, maths) à 1.0, rétrocompatible à seuil 0
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 

@@ -2,6 +2,18 @@
 
 Toutes les versions notables de CybNodes. Format inspiré de Keep a Changelog, versionnage SemVer.
 
+## [0.5.0]
+
+Le seuil livre en 0.4.0 devient enfin utile : les reseaux flous graduent leur confiance au lieu de toujours renvoyer 1.0. Un sujet riche et specifique, ou une intention forte, inspire plus de confiance qu'un signal pauvre ou ambigu.
+
+### Ajoute
+- **SavoirNetwork gradue sa confiance** selon la richesse (nombre de faits utilises) et la specificite (longueur du sujet) : un savoir appuye sur plusieurs faits et un mot plus long, donc moins ambigu, monte plus haut qu'un fait unique sur un mot court.
+- **WebNetwork gradue sa confiance** selon la force de l'intention (cherche, actualite, news vs un signal faible comme "aujourd'hui") et la qualite du resultat (presence d'un extrait, nombre de resultats). Effet : le sur-declenchement web devient maitrisable par le seuil, sans retirer l'intention (donc rien ne casse).
+- Les **reseaux deterministes** (calcul, maths) restent a confiance 1.0 : un resultat exact merite une confiance pleine.
+
+### Compatibilite
+- 100% retrocompatible : la confidence est une metadonnee ; avec threshold=0.0 par defaut le routage est identique a 0.4.0. Tests verts : 9/9 (`test_router`, dont `test_threshold_bites_real_savoir`) + 11/11 (`test_cybnodes`, dont `test_savoir_confidence` et `test_web_confidence`).
+
 ## [0.4.0]
 
 Le routeur sait désormais quand un réseau n'est pas sûr et passe la main proprement.

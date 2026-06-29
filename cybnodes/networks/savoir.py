@@ -84,15 +84,21 @@ class SavoirNetwork(Network):
         if not facts:
             return None
         label = facts[0]["s"]
+        used = facts[:self.max_clauses]
         clauses = []
-        for t in facts[:self.max_clauses]:
+        for t in used:
             verb = _REL_VERB.get(t["r"], t["r"].replace("_", " "))
             clauses.append("%s %s" % (verb, t["o"]))
         text = "%s %s." % (label.capitalize(), ", ".join(clauses))
+        # Confiance (0..1) : un sujet RICHE (plusieurs faits) et SPECIFIQUE (mot plus long, donc
+        # moins ambigu) inspire plus de confiance qu'un fait unique ou un mot court. Le routeur s'en
+        # sert via son seuil ; a seuil 0 (defaut) ca ne change RIEN au routage (retrocompatible).
+        conf = 0.6 + min(0.3, 0.1 * len(used)) + (0.1 if len(ent) >= 5 else 0.0)
         return Result(
             kind="savoir",
             text=text,
             data={"entity": label,
-                  "facts": [[t["s"], t["r"], t["o"]] for t in facts[:self.max_clauses]]},
+                  "facts": [[t["s"], t["r"], t["o"]] for t in used]},
             source="graphe de connaissances : %s" % label,   # le node utilise -> tracable
+            confidence=round(min(1.0, conf), 2),
         )

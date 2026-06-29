@@ -144,6 +144,20 @@ def test_threshold_falls_through_to_next_network():
     assert hit is not None and abs(hit.confidence - 0.95) < 1e-9
 
 
+def test_threshold_bites_real_savoir():
+    """Le seuil 0.4.0 MORD desormais sur un vrai reseau : un savoir riche passe, un savoir pauvre
+    (sous le seuil) rend la main au modele. C'est ce qui rend le seuil utile, pas juste arme."""
+    g = [
+        {"s": "chat", "r": "est_un", "o": "animal"},
+        {"s": "chat", "r": "fait", "o": "miaou"},
+        {"s": "chat", "r": "mange", "o": "des croquettes"},   # riche (3 faits) -> confiance haute
+        {"s": "roc", "r": "est_un", "o": "pierre"},            # pauvre (1 fait, court) -> basse
+    ]
+    cyb = CybNodes(conductor=lambda q, c: "MODELE", networks=[SavoirNetwork(triples=g)], threshold=0.85)
+    assert cyb.route_only("c'est quoi un chat ?") is not None   # riche -> passe le seuil
+    assert cyb.route_only("c'est quoi un roc ?") is None         # pauvre -> sous le seuil, le modele reprend
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

@@ -25,6 +25,14 @@ _INTENT = re.compile(
     r"|en ce moment|aujourd'?hui|ce qui se passe|\bgoogle\b|sur internet|en ligne",
     re.I,
 )
+# Intention FORTE (recherche explicite) vs faible (signal ambigu, ex. "aujourd'hui"). Sert a
+# graduer la confiance : intention faible -> confiance basse -> le seuil du routeur peut la
+# renvoyer au modele (dompte le sur-declenchement) SANS retirer l'intention (donc rien ne casse).
+_STRONG = re.compile(
+    r"\bcherche?\b|\bactualit|\bnews\b|quoi de neuf|derni[eè]re?s? nouvelles"
+    r"|ce qui se passe|\bgoogle\b|sur internet",
+    re.I,
+)
 
 
 class WebNetwork(Network):
@@ -82,10 +90,15 @@ class WebNetwork(Network):
         top = results[0]
         snippet = re.sub(r"<[^>]+>", "", top.get("description", "") or "").strip()
         text = "J'ai cherche, et voila ce que j'ai trouve : %s" % (snippet or top.get("title", ""))
+        # Confiance (0..1) : intention FORTE + resultat substantiel (vrai extrait, plusieurs hits)
+        # = haute ; intention faible (ex. "aujourd'hui") ou resultat maigre = basse. A seuil 0
+        # (defaut) ca ne change RIEN ; avec un seuil, l'adoptant ecarte les recherches douteuses.
+        conf = (0.55 if _STRONG.search(q) else 0.4) + (0.2 if snippet else 0.0) + min(0.2, 0.07 * len(results))
         return Result(
             kind="web",
             text=text,
             data={"query": q, "title": top.get("title", ""), "snippet": snippet,
                   "results": [{"title": r.get("title"), "url": r.get("url")} for r in results]},
             source=top.get("url"),
+            confidence=round(min(1.0, conf), 2),
         )
