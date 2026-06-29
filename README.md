@@ -122,7 +122,7 @@ C'est tout. Le routeur essaie les réseaux ; si aucun ne répond, ton modèle re
 
 | Réseau | Ce qu'il fait | Vérifiable par |
 |---|---|---|
-| `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots "fois / plus / puissance"…), AST sûr, **zéro `eval`** | le calcul lui-même |
+| `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots "fois / plus / puissance"…), AST sûr, **zéro `eval`**, puissances bornées, ne se déclenche pas sur une date ou une phrase | le calcul lui-même |
 | `SavoirNetwork` | **GraphRAG** : répond depuis un graphe de triplets `sujet-relation-objet` | le nœud du graphe |
 | `WebNetwork` | recherche d'actu via l'API **Brave Search** (clé `BRAVE_API_KEY`), cite la source | l'URL renvoyée |
 
@@ -202,6 +202,7 @@ Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python te
 - ✅ **Évidence** : la source remonte dans la réponse (`Weaver(cite=True)` / `{source}`)
 - ✅ **Manifeste** : chaque réseau déclare sa capacité (`Manifest`, `cyb.skills()`)
 - ✅ **Router evals** : `route_only()` + un fichier de tests par catégorie
+- ✅ **Sécurité & gating (0.2.1)** : puissances bornées (anti-DoS), le calcul ne se déclenche plus sur une date ou une phrase, division par zéro honnête, cache du réseau web
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 

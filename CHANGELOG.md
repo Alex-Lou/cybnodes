@@ -2,6 +2,23 @@
 
 Toutes les versions notables de CybNodes. Format inspiré de Keep a Changelog, versionnage SemVer.
 
+## [0.2.1]
+
+Tour de robustesse et de sécurité. Un calcul ne se déclenche que sur une vraie intention, jamais sur une date ou une phrase, et on ne peut plus faire exploser le process avec une puissance géante.
+
+### Sécurité
+- **Borne anti-DoS sur les puissances** : `9**9**9` ou `2**999999999` ne sont plus évalués (les entiers Python sont illimités, donc blocage CPU/RAM). Au-delà des bornes, le réseau rend la main au modèle.
+
+### Modifié
+- **Gating d'intention du calcul** : `CalculNetwork` ne prend plus la main sur une date (`12/05/2024`) ni une phrase qui contient des chiffres (`3+3 tu es belle`). Il faut un vrai calcul : expression isolée, ou un indice (`combien`, `calcule`, `ça fait`...). En cas de doute, le modèle répond.
+- **Division par zéro honnête** : `5 / 0` renvoie un message clair ("Division par zéro : impossible.") au lieu de passer silencieusement la main et de laisser le modèle halluciner.
+
+### Ajouté
+- **Cache du réseau web** : `WebNetwork(cache_ttl=900)` mémorise les réponses identiques (TTL configurable) pour éviter les appels facturés redondants à l'API.
+
+### Compatibilité
+- 100% rétrocompatible. Les 13 tests passent (8 dans `test_cybnodes`, 5 dans `test_router`).
+
 ## [0.2.0]
 
 Tour de fiabilité, suite à un retour de la communauté : le routeur est le produit, et un
