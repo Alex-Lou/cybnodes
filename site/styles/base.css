@@ -54,7 +54,7 @@ code, kbd, pre { font-family: var(--font-mono); }
 
 /* ---- Layout ---- */
 .container { width: min(100% - var(--gutter) * 2, var(--maxw)); margin-inline: auto; }
-.section { padding-block: var(--sp-16); }
+.section { padding-block: var(--sp-8); }
 .section__eyebrow {
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
