@@ -123,6 +123,7 @@ C'est tout. Le routeur essaie les réseaux ; si aucun ne répond, ton modèle re
 | Réseau | Ce qu'il fait | Vérifiable par |
 |---|---|---|
 | `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots "fois / plus / puissance"…), AST sûr, **zéro `eval`**, puissances bornées, ne se déclenche pas sur une date ou une phrase | le calcul lui-même |
+| `MathNetwork` | **maths symboliques** : dérivées, intégrales, limites, équations, simplification / factorisation (sympy) — `pip install cybnodes[math]` | le calcul symbolique exact |
 | `SavoirNetwork` | **GraphRAG** : répond depuis un graphe de triplets `sujet-relation-objet` | le nœud du graphe |
 | `WebNetwork` | recherche d'actu via l'API **Brave Search** (clé `BRAVE_API_KEY`), cite la source | l'URL renvoyée |
 

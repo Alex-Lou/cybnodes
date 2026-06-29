@@ -2,6 +2,17 @@
 
 Toutes les versions notables de CybNodes. Format inspiré de Keep a Changelog, versionnage SemVer.
 
+## [0.3.0]
+
+Nouveau réseau : les **maths avancées** (ce qu'un petit modèle rate au-delà de l'arithmétique).
+
+### Ajouté
+- **`MathNetwork`** : calcul **symbolique EXACT** via sympy — dérivées, intégrales (indéfinies et définies), limites, résolution d'équations, simplification / factorisation / développement. Se déclenche sur l'intention (`dérive`, `intègre`, `limite`, `résous`, `simplifie`, `factorise`, `développe`) + une expression ; sinon il rend la main au modèle.
+- Dépendance **optionnelle** : `pip install cybnodes[math]` (sympy). Sans sympy, `MathNetwork` se tait proprement (`match()` → `None`) — le **cœur reste stdlib-only**.
+
+### Note d'intégration
+- Place `MathNetwork` **avant** `CalculNetwork` dans le routeur (le maths gère `résous x^2 = ...`, le calcul gère l'arithmétique pure). Les deux ne se marchent pas dessus.
+
 ## [0.2.1]
 
 Tour de robustesse et de sécurité. Un calcul ne se déclenche que sur une vraie intention, jamais sur une date ou une phrase, et on ne peut plus faire exploser le process avec une puissance géante.

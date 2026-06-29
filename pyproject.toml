@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cybnodes"
-version = "0.2.1"
+version = "0.3.0"
 description = "Surround any LLM with verifiable capability networks (exact math, knowledge, web) and say each result back in its own voice."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,7 +31,8 @@ Repository = "https://github.com/Alex-Lou/cybnodes"
 Documentation = "https://github.com/Alex-Lou/cybnodes#readme"
 
 [project.optional-dependencies]
-dev = ["pytest"]
+math = ["sympy>=1.12"]
+dev = ["pytest", "sympy>=1.12"]
 
 [tool.setuptools.packages.find]
 include = ["cybnodes*"]

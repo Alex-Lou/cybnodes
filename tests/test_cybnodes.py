@@ -9,7 +9,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from cybnodes import CybNodes, Memory, Persona  # noqa: E402
-from cybnodes.networks import CalculNetwork, SavoirNetwork, WebNetwork  # noqa: E402
+from cybnodes.networks import CalculNetwork, MathNetwork, SavoirNetwork, WebNetwork  # noqa: E402
 
 GRAPH = [
     {"s": "chat", "r": "est_un", "o": "animal"},
@@ -111,6 +111,29 @@ def test_web_cache():
     net.match("cherche X")
     net.match("cherche X")   # 2e fois identique -> cache, aucun 2e appel (= pas de $)
     assert calls["n"] == 1
+
+
+def test_maths_network():
+    net = MathNetwork()
+    if net.match("derivee de x^2") is None:
+        print("   (sympy non installe : MathNetwork se tait proprement, test saute)")
+        return
+    def res(q):
+        r = net.match(q)
+        assert r is not None, "pas de match: " + q
+        return r.data["result"].replace(" ", "")
+    assert res("calcule la derivee de x^2") == "2*x"
+    assert res("integrale de x^2") == "x**3/3"
+    assert res("integrale de x^2 de 0 a 1") == "1/3"
+    sols = set(net.match("resous x^2 - 5x + 6 = 0").data["solutions"])
+    assert sols == {"2", "3"}, sols
+    assert res("simplifie (x^2-1)/(x-1)") == "x+1"
+    assert net.match("factorise x^2 - 4").data["result"].replace(" ", "") in ("(x-2)*(x+2)", "(x+2)*(x-2)")
+    assert res("developpe (x+1)^2") == "x**2+2*x+1"
+    assert res("limite de sin(x)/x quand x tend vers 0") == "1"
+    # ne vole PAS l'arithmetique de base (-> CalculNetwork) ni une phrase quelconque
+    assert net.match("combien font 2+2") is None
+    assert net.match("j'aime les maths") is None
 
 
 if __name__ == "__main__":
