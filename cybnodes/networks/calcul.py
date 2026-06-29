@@ -12,7 +12,7 @@ import operator
 import re
 from typing import Optional
 
-from ..network import Network
+from ..network import Manifest, Network
 from ..result import Result
 
 _OPS = {
@@ -56,6 +56,12 @@ def _clean(raw: str) -> str:
 
 class CalculNetwork(Network):
     name = "calcul"
+    manifest = Manifest(
+        answers="arithmetique exacte (+ - x / ^ %, et les mots fois/plus/divise par/puissance)",
+        deterministic=True,    # un calcul est sa propre preuve, toujours reproductible
+        needs_source=False,
+        fallback="pass",
+    )
 
     def match(self, question: str) -> Optional[Result]:
         work = question or ""

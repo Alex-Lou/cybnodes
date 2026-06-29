@@ -16,10 +16,10 @@ qui "pese" bien plus lourd.
 """
 from .core import CybNodes
 from .memory import Memory
-from .network import Network
+from .network import Manifest, Network
 from .result import Result
 from .router import Router
 from .weaver import Persona, Weaver
 
-__all__ = ["CybNodes", "Network", "Result", "Router", "Weaver", "Persona", "Memory"]
-__version__ = "0.1.0"
+__all__ = ["CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory"]
+__version__ = "0.2.0"

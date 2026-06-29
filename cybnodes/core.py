@@ -35,6 +35,23 @@ class CybNodes:
         self.router.add(network)
         return self
 
+    def skills(self) -> List[dict]:
+        """Introspection : ce que chaque reseau DECLARE savoir faire (son manifeste).
+
+        Utile pour la doc, le debug, et un routeur futur. L'ordre = l'ordre d'essai du routeur.
+        """
+        out = []
+        for net in self.router.networks:
+            m = getattr(net, "manifest", None)
+            out.append({
+                "name": net.name,
+                "answers": m.answers if m else None,
+                "deterministic": m.deterministic if m else None,
+                "needs_source": m.needs_source if m else None,
+                "fallback": m.fallback if m else "pass",
+            })
+        return out
+
     def route_only(self, question: str) -> Optional[Result]:
         """Debug/test : le Result brut du routeur, sans tissage ni modele."""
         return self.router.route((question or "").strip())

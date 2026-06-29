@@ -14,7 +14,7 @@ import re
 import unicodedata
 from typing import List, Optional
 
-from ..network import Network
+from ..network import Manifest, Network
 from ..result import Result
 
 
@@ -44,6 +44,12 @@ _INTENT = re.compile(
 
 class SavoirNetwork(Network):
     name = "savoir"
+    manifest = Manifest(
+        answers="faits depuis ton graphe de connaissances (triplets sujet-relation-objet)",
+        deterministic=True,    # le graphe est la source de verite, reponse stable
+        needs_source=True,     # la reponse devrait pointer le node utilise
+        fallback="pass",
+    )
 
     def __init__(self, triples: Optional[List[dict]] = None,
                  graph_path: Optional[str] = None,
@@ -88,5 +94,5 @@ class SavoirNetwork(Network):
             text=text,
             data={"entity": label,
                   "facts": [[t["s"], t["r"], t["o"]] for t in facts[:self.max_clauses]]},
-            source="graphe de connaissances",
+            source="graphe de connaissances : %s" % label,   # le node utilise -> tracable
         )

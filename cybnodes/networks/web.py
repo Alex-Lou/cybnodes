@@ -16,7 +16,7 @@ import urllib.parse
 import urllib.request
 from typing import Callable, Optional
 
-from ..network import Network
+from ..network import Manifest, Network
 from ..result import Result
 
 _INTENT = re.compile(
@@ -29,6 +29,12 @@ _INTENT = re.compile(
 class WebNetwork(Network):
     name = "web"
     ENDPOINT = "https://api.search.brave.com/res/v1/web/search"
+    manifest = Manifest(
+        answers="actualite et faits externes via recherche web (API Brave Search)",
+        deterministic=False,   # le web bouge -> reponse non reproductible
+        needs_source=True,     # toujours citer l'URL
+        fallback="pass",       # sans cle ou sans resultat, on rend la main au modele
+    )
 
     def __init__(self, api_key: Optional[str] = None, env_var: str = "BRAVE_API_KEY",
                  max_results: int = 3, timeout: int = 8,
