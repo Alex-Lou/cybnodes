@@ -43,7 +43,7 @@ _OPS = [
 # n'est ni un nombre, ni un operateur, ni une variable (1 lettre), ni une fonction connue est du bruit.
 _FILLER = re.compile(
     r"\b(calcule[rz]?|donne[rsz]?|trouve[rz]?|quelles?|quels?|est|combien|vaut|font?|"
-    r"les?|la|du|des|de|en|fonction|par|rapport|[aà]|il|te|pla[iî]t|stp|svp|merci|"
+    r"les?|la|l|j|qu|du|des|de|en|fonction|par|rapport|[aà]|il|te|pla[iî]t|stp|svp|merci|"
     r"peux|tu|pour|moi|cette|cet|ce|une?|et|ou|the|of|please|quand|tend|vers|approche|entre|from|to)\b",
     re.I)
 
