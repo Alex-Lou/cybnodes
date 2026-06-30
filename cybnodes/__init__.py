@@ -14,6 +14,7 @@ qui "pese" bien plus lourd.
     )
     cyb.ask("combien font 7 x 8 ?")   # -> reponse EXACTE, tissee dans la voix
 """
+from .cache import SemanticCache
 from .core import CybNodes
 from .memory import Memory
 from .network import Manifest, Network
@@ -24,6 +25,6 @@ from .weaver import Persona, Weaver
 
 __all__ = [
     "CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory",
-    "SemanticNetwork", "HybridNetwork", "cosine", "Embedder",
+    "SemanticNetwork", "HybridNetwork", "cosine", "Embedder", "SemanticCache",
 ]
 __version__ = "0.5.0"
