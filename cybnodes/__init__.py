@@ -19,7 +19,11 @@ from .memory import Memory
 from .network import Manifest, Network
 from .result import Result
 from .router import Router
+from .semantic import Embedder, HybridNetwork, SemanticNetwork, cosine
 from .weaver import Persona, Weaver
 
-__all__ = ["CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory"]
+__all__ = [
+    "CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory",
+    "SemanticNetwork", "HybridNetwork", "cosine", "Embedder",
+]
 __version__ = "0.5.0"
