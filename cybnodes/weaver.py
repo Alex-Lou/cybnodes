@@ -27,16 +27,40 @@ class Persona:
         return self.templates.get(kind)
 
 
+# Phrases d'incertitude par defaut, servies quand la confiance est SOUS le seuil
+# (selective prediction / abstention douce, Chow 1970) : la persona ADMET le doute au lieu
+# d'affirmer avec aplomb. Surchargeables via persona.templates["_hedge"] ou Weaver(hedges=[...]).
+_DEFAULT_HEDGES = [
+    "Je ne suis pas tout a fait sure, mais je crois que... {value}",
+    "Hmm, a verifier, mais il me semble que... {value}",
+    "Je dirais... {value} (a confirmer !)",
+]
+
+
 class Weaver:
-    def __init__(self, persona: Optional[Persona] = None, cite: bool = False):
+    def __init__(self, persona: Optional[Persona] = None, cite: bool = False,
+                 hedge_below: float = 0.0, hedges: Optional[List[str]] = None):
         self.persona = persona or Persona()
         self.cite = cite
+        self.hedge_below = float(hedge_below)   # 0.0 -> jamais de nuance (comportement historique)
+        self.hedges = list(hedges) if hedges is not None else None
 
     def weave(self, result: Result) -> str:
         text = self._render(result)
+        # NUANCE par confiance : sous le seuil, on admet le doute plutot que d'asséner.
+        if self.hedge_below > 0.0 and result.confidence < self.hedge_below:
+            text = self._hedge(result, text)
         if self.cite and result.source and result.source not in text:
             text = "%s (source : %s)" % (text, result.source)
         return text
+
+    def _hedge(self, result: Result, text: str) -> str:
+        opts = self.persona.template_for("_hedge") or self.hedges or _DEFAULT_HEDGES
+        tpl = opts[sum(ord(c) for c in str(result.text)) % len(opts)]
+        try:
+            return tpl.format(value=text, source=result.source or "", **result.data)
+        except (KeyError, IndexError, ValueError):
+            return tpl.replace("{value}", text)
 
     def _render(self, result: Result) -> str:
         templates = self.persona.template_for(result.kind)
