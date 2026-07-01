@@ -125,6 +125,8 @@ C'est tout. Le routeur essaie les réseaux ; si aucun ne répond, ton modèle re
 | `CalculNetwork` | arithmétique exacte (`+ - × ÷ ^ %`, mots "fois / plus / puissance"…), AST sûr, **zéro `eval`**, puissances bornées, ne se déclenche pas sur une date ou une phrase | le calcul lui-même |
 | `MathNetwork` | **maths symboliques** : dérivées, intégrales, limites, équations, simplification / factorisation (sympy) — `pip install cybnodes[math]` | le calcul symbolique exact |
 | `SavoirNetwork` | **GraphRAG** : répond depuis un graphe de triplets `sujet-relation-objet` | le nœud du graphe |
+| `RecallNetwork` | **récupération lexicale** (pondérée IDF) dans un corpus de Q/R validées : **récite** la réponse stockée (jamais reformulée → zéro hallucination sur le chemin trouvé), tolère les fautes de frappe, s'abstient sous le seuil | la paire Q/R stockée |
+| `GroundingGate` | **enveloppe** un réseau et vérifie l'ancrage AVANT de servir : consensus des golds proches (+ verifier NLI optionnel) ; n'ôte que le douteux, n'invente rien, fail-safe | le désaccord interne du corpus |
 | `WebNetwork` | recherche d'actu via l'API **Brave Search** (clé `BRAVE_API_KEY`), cite la source | l'URL renvoyée |
 
 Chaque réseau ne se déclenche que quand il est sûr de lui ; sinon il rend la main (renvoie `None`).
@@ -200,6 +202,28 @@ cyb = CybNodes(conductor=mon_llm, networks=[SavoirNetwork(graph_path="g.json")],
 # "c'est quoi le soleil ?" -> 1 seul fait            -> confidence 0.8 -> écarté (< 0.85), le modèle reprend la main
 ```
 
+**Router par le sens, cacher, nuancer (0.6.0).** Trois renforts, tous zéro-dépendance et opt-in (l'embedder est toujours *injecté* — le cœur ne dépend de rien) :
+
+```python
+from cybnodes import SemanticNetwork, HybridNetwork, SemanticCache, Weaver
+from cybnodes.networks import RecallNetwork, GroundingGate
+
+# 1. Routage par le SENS : "les matous" route vers le réseau chat, sans le mot "chat".
+#    La similarité cosinus devient la confidence -> le seuil du routeur la gate, sans changement.
+chat = SemanticNetwork("savoir-chat", utterances=["c'est quoi un chat", "les félins"], embedder=emb)
+savoir = HybridNetwork(SavoirNetwork(graph_path="g.json"), chat)   # mot-clé d'abord, sens en repli
+
+# 2. Récupérer + réciter des réponses VALIDÉES, puis vérifier l'ancrage avant de servir.
+recall = GroundingGate(RecallNetwork(pairs=[("c'est quoi Pixar ?", "Pixar, un studio d'animation.")]))
+recall.match("cest quoi Pixr")        # -> récite "Pixar…" (faute corrigée), None si des golds proches divergent
+
+# 3. Cache sémantique CALIBRÉ : ne rejoue pas une question déjà vue, sans jamais figer l'incertitude.
+cache = SemanticCache(embedder=emb)   # deux étages (exact + sémantique) ; calibrate() dérive le seuil de tes données
+
+# 4. Nuance (hedging) : sous le seuil de confiance, la voix ADMET le doute au lieu d'asséner.
+weaver = Weaver(hedge_below=0.6)      # "je crois que… {value}"  (0.0 par défaut = jamais, historique)
+```
+
 ---
 
 ## Quand l'utiliser (et quand non)
@@ -221,7 +245,7 @@ cyb = CybNodes(conductor=mon_llm, networks=[SavoirNetwork(graph_path="g.json")],
 
 ## État du projet
 
-Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python tests/test_router.py`) :
+Ce qui marche aujourd'hui, testé (`python -m pytest` — 67/67) :
 
 - ✅ Cœur (routeur, tisseur/persona, mémoire, conducteur model-agnostic)
 - ✅ `CalculNetwork`, `SavoirNetwork` (GraphRAG), `WebNetwork` (Brave)
@@ -231,6 +255,11 @@ Ce qui marche aujourd'hui, testé (`python tests/test_cybnodes.py` et `python te
 - ✅ **Sécurité & gating (0.2.1)** : puissances bornées (anti-DoS), le calcul ne se déclenche plus sur une date ou une phrase, division par zéro honnête, cache du réseau web
 - ✅ **Routage par confiance (0.4.0)** : `Router(threshold=...)` honore `Result.confidence` ; sous le seuil, le réseau passe la main (au suivant, puis au modèle). Rétrocompatible : `threshold=0.0` par défaut
 - ✅ **Confiance graduée des réseaux flous (0.5.0)** : `SavoirNetwork` note selon la richesse / spécificité du sujet, `WebNetwork` selon la force de l'intention et la qualité du résultat ; le seuil de 0.4.0 devient donc utile en pratique. Déterministes (calcul, maths) à 1.0, rétrocompatible à seuil 0
+- ✅ **Routage par le sens (0.6.0)** : `SemanticNetwork` / `HybridNetwork`, embedder **injecté** (zéro dep), similarité cosinus = `confidence` gatée par le seuil du routeur ; hybride « mot-clé d'abord, sens en repli »
+- ✅ **Cache sémantique calibré (0.6.0)** : `SemanticCache` deux étages (exact sans-perte + sémantique conservateur), `calibrate()` **dérive** le seuil de tes données au lieu de le deviner, ne cache jamais l'incertitude, TTL
+- ✅ **`RecallNetwork` (0.6.0)** : rappel lexical pondéré IDF depuis un corpus Q/R validé, **récite** (zéro hallucination sur le chemin trouvé), s'abstient sous le seuil, tolère les fautes de frappe (`fuzzy=True`, « Pixr » → « Pixar »), `stopwords`/`synonyms` pour une autre langue ou du SMS
+- ✅ **`GroundingGate` (0.6.0)** : vérifie l'ancrage avant de servir (consensus des golds proches + verifier NLI optionnel), fail-safe, n'ôte que le douteux — n'invente rien
+- ✅ **Nuance par confiance / hedging (0.6.0)** : `Weaver(hedge_below=...)` fait admettre le doute à la voix sous le seuil au lieu d'asséner ; rétrocompatible (`0.0` = jamais). 67/67 tests verts
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 
