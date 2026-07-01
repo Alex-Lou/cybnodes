@@ -21,7 +21,7 @@
 @media (max-width: 720px) { .nav__links a:not(.btn) { display: none; } }
 
 /* ---- HERO ---- */
-.hero { position: relative; text-align: center; padding-block: var(--sp-32) var(--sp-24); overflow: hidden; }
+.hero { position: relative; text-align: center; padding-block: var(--sp-24) var(--sp-16); overflow: hidden; }
 #net-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; opacity: .55; }
 .hero__wolf { width: 92px; height: 92px; margin-inline: auto; margin-bottom: var(--sp-6); filter: drop-shadow(var(--glow-accent)); animation: float-y 6s var(--ease) infinite; }
 .hero__title { font-size: var(--fs-3xl); letter-spacing: -.03em; }
@@ -32,7 +32,7 @@
 .hero__pip code { color: var(--c-accent); }
 
 /* ---- Titre de section centré ---- */
-.head { text-align: center; max-width: 64ch; margin: 0 auto var(--sp-12); }
+.head { text-align: center; max-width: 64ch; margin: 0 auto var(--sp-8); }
 .head .section__lead { margin-inline: auto; }
 .divider { height: 1px; background: var(--grad-line); background-size: 200% 100%; animation: line-sweep 6s linear infinite; }
 
@@ -78,6 +78,11 @@
 .code .tok-fn { color: var(--c-accent); }
 .code .tok-str { color: var(--c-ok); }
 .code .tok-com { color: var(--c-text-faint); font-style: italic; }
+
+/* ---- Flux anime (diagramme) ---- */
+.flow { max-width: 400px; margin: 0 auto var(--sp-8); }
+.flow__svg { width: 100%; height: auto; display: block; }
+.flow__cap { text-align: center; color: var(--c-text-dim); font-size: var(--fs-sm); max-width: 52ch; margin: var(--sp-4) auto 0; }
 
 /* ---- Architecture : les 5 couches ---- */
 .arch { display: flex; flex-direction: column; gap: var(--sp-3); max-width: 640px; margin-inline: auto; }

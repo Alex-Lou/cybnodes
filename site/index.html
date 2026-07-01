@@ -156,6 +156,41 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
           <p class="section__eyebrow" data-i18n="arch.eyebrow">// architecture</p>
           <h2 data-i18n="arch.h2">Les <span class="grad">5 couches</span></h2>
         </div>
+        <div class="flow reveal">
+          <svg class="flow__svg" viewBox="0 0 340 444" role="img" aria-label="CybNodes flow">
+            <defs><style>
+              .flow__svg text{font-family:var(--font-mono);fill:var(--c-text)}
+              .flow__svg .fn{fill:var(--c-surface);stroke:var(--c-accent);stroke-width:1.6}
+              .flow__svg .fl{fill:none;stroke:var(--c-accent);stroke-width:1.4;opacity:.3}
+              .flow__svg .fl2{fill:none;stroke:var(--c-accent);stroke-width:1.3;stroke-dasharray:3 5;opacity:.55;animation:fdash 1.4s linear infinite}
+              @keyframes fdash{to{stroke-dashoffset:-16}}
+              .flow__svg .fp{animation:fpulse 3.2s ease-in-out infinite}
+              @keyframes fpulse{0%,100%{opacity:.82}50%{opacity:1}}
+              .flow__svg .acc{fill:var(--c-accent)}
+              .flow__svg .dim{fill:var(--c-text-dim)}
+              .flow__svg .dot{fill:var(--c-accent);filter:drop-shadow(0 0 4px var(--c-accent))}
+            </style></defs>
+            <path class="fl" d="M170 44 V64"/>
+            <path class="fl2" d="M170 110 L64 148"/><path class="fl2" d="M170 110 V148"/><path class="fl2" d="M170 110 L276 148"/>
+            <path class="fl2" d="M64 192 L170 266"/><path class="fl2" d="M170 192 V266"/><path class="fl2" d="M276 192 L170 266"/>
+            <path class="fl" d="M170 310 V386"/>
+            <path class="fl" d="M286 266 L242 288"/>
+            <g class="fp"><circle class="fn" cx="170" cy="28" r="15"/><text class="acc" x="170" y="33" text-anchor="middle" font-size="15">?</text></g>
+            <text class="dim" x="170" y="60" text-anchor="middle" font-size="9" data-i18n="flow.q">la question</text>
+            <g class="fp" style="animation-delay:.4s"><rect class="fn" x="102" y="68" width="136" height="42" rx="9"/><text class="acc" x="170" y="94" text-anchor="middle" font-size="12" data-i18n="flow.router">ROUTEUR</text></g>
+            <g class="fp" style="animation-delay:.8s"><rect class="fn" x="20" y="148" width="88" height="44" rx="9"/><text x="64" y="175" text-anchor="middle" font-size="11" data-i18n="flow.calc">Calcul</text></g>
+            <g class="fp" style="animation-delay:1s"><rect class="fn" x="126" y="148" width="88" height="44" rx="9"/><text x="170" y="175" text-anchor="middle" font-size="11" data-i18n="flow.know">Savoir</text></g>
+            <g class="fp" style="animation-delay:1.2s"><rect class="fn" x="232" y="148" width="88" height="44" rx="9"/><text x="276" y="175" text-anchor="middle" font-size="11" data-i18n="flow.web">Web</text></g>
+            <g class="fp" style="animation-delay:1.6s"><rect class="fn" x="102" y="266" width="136" height="44" rx="9"/><text class="acc" x="170" y="293" text-anchor="middle" font-size="12" data-i18n="flow.weaver">TISSEUR</text></g>
+            <g class="fp" style="animation-delay:1.6s"><rect class="fn" x="254" y="266" width="68" height="40" rx="9"/><text x="288" y="291" text-anchor="middle" font-size="11">LLM</text></g>
+            <text class="dim" x="262" y="262" font-size="8" data-i18n="flow.voice">voix</text>
+            <g class="fp" style="animation-delay:2s"><circle class="fn" cx="170" cy="402" r="15"/><text class="acc" x="170" y="407" text-anchor="middle" font-size="13">&#10003;</text></g>
+            <text class="dim" x="170" y="434" text-anchor="middle" font-size="9" data-i18n="flow.answer">la réponse</text>
+            <circle r="4.5" class="dot"><animateMotion dur="4.6s" repeatCount="indefinite" path="M170 28 V89 L170 170 L170 288 L170 402"/></circle>
+            <circle r="4.5" class="dot" opacity=".65"><animateMotion dur="4.6s" begin="2.3s" repeatCount="indefinite" path="M170 28 V89 L170 170 L170 288 L170 402"/></circle>
+          </svg>
+          <p class="flow__cap" data-i18n="flow.cap">La question entre, le <strong>routeur</strong> interroge les réseaux, l'un répond — ou aucun. Le <strong>tisseur</strong> le redit dans la voix du modèle, et la réponse ressort, vérifiable.</p>
+        </div>
         <div class="arch reveal">
           <div class="layer"><span class="layer__n">1</span><div><strong data-i18n="arch.l1t">Le Conducteur</strong><span data-i18n="arch.l1s">ton modèle, sa voix, sa personnalité</span></div></div>
           <div class="layer__arrow">↓</div>
