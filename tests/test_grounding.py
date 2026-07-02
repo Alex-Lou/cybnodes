@@ -140,3 +140,19 @@ def test_integration_routeur():
     assert router.route("le sang c'est quoi") is None            # conflit -> le routeur passe la main
     r = router.route("c'est quoi Pixar")
     assert r is not None and "studio" in r.text                  # clair -> servi
+
+
+def test_conflict_pairs_veto_en_mode_auto():
+    # regression 0.6.0 : une contradiction DECLAREE (conflict_pairs) est un VETO meme dans le
+    # repli lexical (mode auto sans clusters). Avant, deux reponses lexicalement PROCHES mais
+    # declarees contradictoires (Canberra vs Sydney) etaient servies quand meme.
+    pairs = [
+        ("la capitale de l'Australie ?", "La capitale de l'Australie, c'est Canberra."),
+        ("capitale de l'Australie, c'est quoi ?", "La capitale de l'Australie, c'est Sydney."),
+    ]
+    contradiction = [["La capitale de l'Australie, c'est Canberra.",
+                      "La capitale de l'Australie, c'est Sydney."]]
+    sans = GroundingGate(_recall(pairs))
+    avec = GroundingGate(_recall(pairs), conflict_pairs=contradiction)
+    assert sans.match("capitale de l'Australie") is not None    # proches en tokens -> servi (fusion)
+    assert avec.match("capitale de l'Australie") is None        # contradiction declaree -> abstention

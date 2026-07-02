@@ -106,6 +106,9 @@ class SemanticCache:
         """
         if self._embedder is None:
             raise ValueError("calibrate() a besoin d'un embedder injecte")
+        if not positives or not negatives:
+            # sans negatives, TOUT seuil semble sur -> threshold 0.0 = faux hits garantis (mentir).
+            raise ValueError("calibrate() exige des positives ET des negatives non vides")
         pos = [cosine(self._embedder(a), self._embedder(b)) for a, b in positives]
         neg = [cosine(self._embedder(a), self._embedder(b)) for a, b in negatives]
         curve: List[dict] = []

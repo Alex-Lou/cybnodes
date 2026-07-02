@@ -29,18 +29,24 @@ Embedder = Callable[[str], Sequence[float]]
 def cosine(a: Sequence[float], b: Sequence[float]) -> float:
     """Similarite cosinus, pure Python (zero dependance).
 
-    Renvoie 0.0 si l'un des vecteurs est vide, nul, ou de taille differente (jamais d'exception :
-    un embedder fragile ne doit pas casser le routage).
+    Renvoie 0.0 si l'un des vecteurs est vide, nul, de taille differente, ou porte des valeurs
+    non numeriques / non finies (NaN, Inf). Jamais d'exception : un embedder fragile ne doit
+    pas casser le routage.
     """
     if not a or not b or len(a) != len(b):
         return 0.0
     dot = na = nb = 0.0
-    for x, y in zip(a, b):
-        dot += x * y
-        na += x * x
-        nb += y * y
+    try:
+        for x, y in zip(a, b):
+            dot += x * y
+            na += x * x
+            nb += y * y
+    except TypeError:
+        return 0.0  # composante non numerique -> on decline, on ne plante pas
     if na <= 0.0 or nb <= 0.0:
         return 0.0
+    if not (math.isfinite(dot) and math.isfinite(na) and math.isfinite(nb)):
+        return 0.0  # NaN/Inf dans l'embedding -> 0.0 plutot que propager le poison
     return dot / math.sqrt(na * nb)
 
 

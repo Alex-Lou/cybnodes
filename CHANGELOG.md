@@ -20,8 +20,14 @@ La release de la **fiabilité de la récupération**. Cinq briques qui composent
 
 - **Nuance par confiance dans le Weaver (hedging).** Sous un seuil de confiance, la voix ADMET le doute (« je ne suis pas tout à fait sûre, mais je crois que… {value} ») au lieu d'asséner un fait incertain avec aplomb. `Weaver(hedge_below=0.6)` ; phrases surchargeables via `Weaver(hedges=[...])` ou `persona.templates["_hedge"]`. Complète l'abstention DURE du routeur (0.4.0) par une abstention DOUCE côté présentation. Défaut `hedge_below=0.0` → jamais de nuance (comportement historique).
 
+### Durci (audit adverse pré-release)
+- `Weaver._hedge()` ne plante plus quand `result.data` porte une clé `value`/`source` (p.ex. le calcul) : les champs réservés sont posés APRÈS les data, même pattern que `_render`.
+- `cosine()` tient sa promesse « jamais d'exception » : NaN/Inf ou composante non numérique → `0.0` (un embedder fragile ne casse ni le routage ni le cache).
+- `GroundingGate` : une contradiction déclarée via `conflict_pairs` est un **veto** même dans le repli lexical (mode `auto` sans clusters) — le paramètre n'est plus inerte dans sa configuration par défaut.
+- `SemanticCache.calibrate()` refuse des `positives`/`negatives` vides (`ValueError`, même style que le garde embedder) au lieu de poser silencieusement `threshold=0.0` — qui aurait servi n'importe quel faux hit.
+
 ### Compatibilité
-- **100 % rétrocompatible.** Tout est opt-in ou inerte par défaut : `threshold=0.0`, `hedge_below=0.0`, cache non câblé d'office, nouveaux réseaux à instancier soi-même ; sur une requête PROPRE, `fuzzy=True` et `fuzzy=False` donnent le MÊME résultat. Le cœur reste **stdlib-only** (les embedders sont injectés, jamais importés). Tests verts : **67/67** (`test_cybnodes`, `test_router`, `test_semantic`, `test_cache`, `test_recall`, `test_grounding`, `test_weaver`).
+- **100 % rétrocompatible.** Tout est opt-in ou inerte par défaut : `threshold=0.0`, `hedge_below=0.0`, cache non câblé d'office, nouveaux réseaux à instancier soi-même ; sur une requête PROPRE, `fuzzy=True` et `fuzzy=False` donnent le MÊME résultat. Le cœur reste **stdlib-only** (les embedders sont injectés, jamais importés). Tests verts : **71/71** (`test_cybnodes`, `test_router`, `test_semantic`, `test_cache`, `test_recall`, `test_grounding`, `test_weaver` — dont 4 tests de régression du durcissement).
 
 ## [0.5.0]
 

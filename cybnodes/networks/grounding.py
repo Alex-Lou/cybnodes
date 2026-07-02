@@ -148,9 +148,10 @@ class GroundingGate(Network):
                 if rc is None or rc != bc or self._hard_conflict(best_ans, ans):
                     return True                  # inconnu / cluster different / contradiction
             return False                         # tous les rivaux proches = MEME sens -> redondance
-        # repli LEXICAL (comportement historique)
+        # repli LEXICAL (comportement historique). Une contradiction DECLAREE (conflict_pairs)
+        # reste un VETO ici aussi : un desaccord dur n'est jamais fusionnable, quel que soit le mode.
         for ans in self._rivals(topk):
-            if self._answer_sim(best_ans, ans) < self.answer_sim_thr:
+            if self._hard_conflict(best_ans, ans) or self._answer_sim(best_ans, ans) < self.answer_sim_thr:
                 return True
         return False
 

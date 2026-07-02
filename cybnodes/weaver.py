@@ -57,8 +57,13 @@ class Weaver:
     def _hedge(self, result: Result, text: str) -> str:
         opts = self.persona.template_for("_hedge") or self.hedges or _DEFAULT_HEDGES
         tpl = opts[sum(ord(c) for c in str(result.text)) % len(opts)]
+        # meme pattern que _render : value/source poses APRES les data, pour qu'une cle data
+        # homonyme (p.ex. data["value"] du calcul) n'ecrase rien ni ne fasse planter format().
+        fields = dict(result.data)
+        fields["value"] = text
+        fields["source"] = result.source or ""
         try:
-            return tpl.format(value=text, source=result.source or "", **result.data)
+            return tpl.format(**fields)
         except (KeyError, IndexError, ValueError):
             return tpl.replace("{value}", text)
 

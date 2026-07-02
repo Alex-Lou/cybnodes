@@ -245,7 +245,7 @@ weaver = Weaver(hedge_below=0.6)      # "je crois que… {value}"  (0.0 par déf
 
 ## État du projet
 
-Ce qui marche aujourd'hui, testé (`python -m pytest` — 67/67) :
+Ce qui marche aujourd'hui, testé (`python -m pytest` — 71/71) :
 
 - ✅ Cœur (routeur, tisseur/persona, mémoire, conducteur model-agnostic)
 - ✅ `CalculNetwork`, `SavoirNetwork` (GraphRAG), `WebNetwork` (Brave)
@@ -259,7 +259,7 @@ Ce qui marche aujourd'hui, testé (`python -m pytest` — 67/67) :
 - ✅ **Cache sémantique calibré (0.6.0)** : `SemanticCache` deux étages (exact sans-perte + sémantique conservateur), `calibrate()` **dérive** le seuil de tes données au lieu de le deviner, ne cache jamais l'incertitude, TTL
 - ✅ **`RecallNetwork` (0.6.0)** : rappel lexical pondéré IDF depuis un corpus Q/R validé, **récite** (zéro hallucination sur le chemin trouvé), s'abstient sous le seuil, tolère les fautes de frappe (`fuzzy=True`, « Pixr » → « Pixar »), `stopwords`/`synonyms` pour une autre langue ou du SMS
 - ✅ **`GroundingGate` (0.6.0)** : vérifie l'ancrage avant de servir (consensus des golds proches + verifier NLI optionnel), fail-safe, n'ôte que le douteux — n'invente rien
-- ✅ **Nuance par confiance / hedging (0.6.0)** : `Weaver(hedge_below=...)` fait admettre le doute à la voix sous le seuil au lieu d'asséner ; rétrocompatible (`0.0` = jamais). 67/67 tests verts
+- ✅ **Nuance par confiance / hedging (0.6.0)** : `Weaver(hedge_below=...)` fait admettre le doute à la voix sous le seuil au lieu d'asséner ; rétrocompatible (`0.0` = jamais). 71/71 tests verts
 
 Pistes ouvertes (design posé, pas encore livré, pas de promesse vide) :
 

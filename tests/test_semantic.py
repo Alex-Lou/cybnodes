@@ -133,6 +133,16 @@ def test_routing_accuracy_semantic_plus_exact():
     assert score == len(_CASES), "le routage par le sens s'est trompe sur au moins un cas"
 
 
+def test_cosine_vecteurs_empoisonnes():
+    # regression 0.6.0 : NaN/Inf ou composante non numerique -> 0.0 promis par la docstring,
+    # jamais d'exception (un embedder fragile ne doit pas casser le routage ni le cache).
+    from cybnodes import cosine
+    assert cosine([float("nan"), 1.0], [1.0, 1.0]) == 0.0
+    assert cosine([float("inf"), 1.0], [1.0, 1.0]) == 0.0
+    assert cosine(["a", 1.0], [1.0, 1.0]) == 0.0
+    assert cosine([1.0, 0.0], [1.0, 0.0]) == 1.0       # le chemin sain reste intact
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

@@ -114,6 +114,20 @@ def test_calibration_curve_is_monotone_and_reported():
     assert curve[0]["threshold"] == 0.0 and curve[-1]["threshold"] == 1.0
 
 
+def test_calibrate_refuse_paires_vides():
+    # regression 0.6.0 : negatives=[] posait threshold=0.0 (l'etage semantique servait n'importe
+    # quel cosinus > 0 = faux hits garantis). Desormais calibrate exige positives ET negatives,
+    # et un appel invalide ne detruit pas le seuil en place.
+    c = SemanticCache(embedder=_ctrl_embed)
+    for pos, neg in ([[], [("a", "b")]], [[("a", "b")], []]):
+        try:
+            c.calibrate(pos, neg)
+            assert False, "calibrate aurait du refuser des paires vides"
+        except ValueError:
+            pass
+    assert c.threshold == 0.95             # le seuil conservateur n'a pas ete touche
+
+
 if __name__ == "__main__":
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

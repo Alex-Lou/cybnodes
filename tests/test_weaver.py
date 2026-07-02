@@ -39,3 +39,12 @@ def test_persona_hedge_template_wins():
 def test_hedge_and_cite_combine():
     out = Weaver(cite=True, hedge_below=0.6).weave(_r(text="Paris", conf=0.3, source="geo.txt"))
     assert "Paris" in out and "geo.txt" in out and out != "Paris"
+
+
+def test_hedge_survives_data_value_key():
+    # regression 0.6.0 : un Result dont data porte "value"/"source" (p.ex. CalculNetwork) faisait
+    # planter _hedge en TypeError (kwarg en double dans format). Meme pattern que _render desormais.
+    r = Result(kind="calcul", text="47 x 38 = 1786", source="calcul exact", confidence=0.2,
+               data={"value": 1786, "source": "interne"})
+    out = Weaver(hedge_below=0.6).weave(r)
+    assert "1786" in out and out != "47 x 38 = 1786"   # nuance exprimee, zero crash
