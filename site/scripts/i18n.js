@@ -67,7 +67,7 @@
     "flow.weaver": `WEAVER`,
     "flow.voice": `voice`,
     "flow.answer": `the answer`,
-    "flow.cap": `The question comes in, the <strong>router</strong> queries the networks, one answers — or none. The <strong>weaver</strong> says it back in the model's voice, and the answer comes out, verifiable.`,
+    "flow.cap": `The question comes in, the <strong>router</strong> queries the networks, one answers - or none. The <strong>weaver</strong> says it back in the model's voice, and the answer comes out, verifiable.`,
     "net.eyebrow": `// networks included`,
     "net.h2": `The <span class="grad">circuits</span>, ready to plug in`,
     "net.lead": `Shared rule: a network stays quiet the moment it doubts. Deterministic networks (math) hand control back outright; fuzzy networks (knowledge, web) score their confidence, and the router drops them below the threshold. The upshot: the answer is never shaky, the model takes over when in doubt.`,
