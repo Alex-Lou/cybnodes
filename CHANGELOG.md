@@ -2,6 +2,17 @@
 
 Toutes les versions notables de CybNodes. Format inspiré de Keep a Changelog, versionnage SemVer.
 
+## [0.7.0]
+
+Le RecallNetwork sait maintenant **calibrer lui-même son seuil d'abstention** par contrôle de risque sélectif (esprit conformal) : « ne pas dépasser tel taux d'erreur » passe d'une heuristique (`min_score` deviné) à une **garantie finie-échantillon, mesurable sur tes données**. C'est la brique qui transforme « ne pas halluciner » de promesse en contrôle prouvable.
+
+### Ajouté
+- **`RecallNetwork.calibrate_abstention(examples, target_error=0.1, confidence=0.9)`** : à partir d'un jeu `(question, bonne_réponse)`, mesure le score et la justesse du meilleur match, puis fixe `min_score` au seuil le **plus bas** (couverture maximale) dont la **borne supérieure** du taux d'erreur parmi les réponses servies reste `≤ target_error` avec la confiance demandée. Borne distribution-free (Hoeffding + union bound sur les seuils testés → honnête sous sélection, pas une moyenne optimiste). Renvoie `(seuil, courbe)` inspectable (`coverage`, `error`, `error_upper`, `n_served`).
+- **Repli sûr** : si les données ne permettent pas de garantir la cible (trop peu d'exemples ou cible trop stricte), le seuil est posé au-delà de 1.0 → **abstention totale** plutôt qu'une promesse de risque intenable (doctrine : mieux se taire que servir un fait faux avec aplomb).
+
+### Compatibilité
+- 100 % rétrocompatible : purement additif (nouvelle méthode opt-in ; `min_score` reste réglable à la main). Cœur stdlib-only. Tests verts : **74/74** (+3 sur la calibration : repli sûr sur données minces, monotonie strict≥lax, service autorisé sur données amples).
+
 ## [0.6.0]
 
 La release de la **fiabilité de la récupération**. Cinq briques qui composent une chaîne : router par le **sens** (pas que le mot-clé), **récupérer et réciter** une réponse validée (jamais reformulée), **vérifier l'ancrage** avant de servir, **nuancer** la voix quand la confiance est basse, et **ne pas rejouer** deux fois la même question. Tout reste zéro-dépendance, model-agnostic, et rétrocompatible.

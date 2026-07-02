@@ -102,3 +102,40 @@ def test_recites_not_rephrases():
     stored = "Reponse stockee mot pour mot, telle quelle."
     r = RecallNetwork(pairs=[("question test unique", stored)]).match("question test unique")
     assert r is not None and r.text == stored
+
+
+def test_calibrate_abstention_safe_fallback_on_thin_data():
+    # 0.7.0 : sur peu de donnees + cible tres stricte, le controle ne peut RIEN garantir -> il se
+    # TAIT (seuil > 1 = abstention totale) plutot que de promettre un risque qu'il ne tient pas.
+    net = RecallNetwork(pairs=PAIRS)
+    ex = [("c'est quoi Pixar", "Pixar, c'est un studio d'animation americain."),
+          ("qui est Zeus", "Zeus, c'est le roi des dieux grecs."),
+          ("quelle meteo demain a Tokyo", "HORS_CORPUS"),
+          ("recette de la tarte tatin", "HORS_CORPUS")]
+    tau, curve = net.calibrate_abstention(ex, target_error=0.01, confidence=0.99)
+    assert isinstance(curve, list) and net.min_score == tau
+    assert tau > 1.0                                   # abstention totale = repli SUR
+    assert net.match("qui est Zeus") is None           # plus rien n'est servi (doctrine : se taire)
+
+
+def test_calibrate_stricter_is_never_more_permissive():
+    ex = [("c'est quoi Pixar", "Pixar, c'est un studio d'animation americain."),
+          ("qui est Zeus", "Zeus, c'est le roi des dieux grecs."),
+          ("la capitale de la France", "La capitale de la France, c'est Paris."),
+          ("truc sans aucun rapport", "X"), ("autre hors sujet total", "Y")]
+    lax = RecallNetwork(pairs=PAIRS)
+    t_lax, _ = lax.calibrate_abstention(ex, target_error=0.5, confidence=0.8)
+    strict = RecallNetwork(pairs=PAIRS)
+    t_strict, _ = strict.calibrate_abstention(ex, target_error=0.05, confidence=0.99)
+    assert t_strict >= t_lax                           # exiger moins d'erreur ne BAISSE jamais le seuil
+
+
+def test_calibrate_serves_with_ample_clean_calibration():
+    # beaucoup d'exemples PROPRES (erreur observee nulle, n grand) -> la borne descend sous la cible
+    # -> le controle AUTORISE a servir (le mecanisme n'est pas vacuously toujours-abstention).
+    net = RecallNetwork(pairs=PAIRS)
+    clean = [("c'est quoi Pixar", "Pixar, c'est un studio d'animation americain."),
+             ("qui est Zeus", "Zeus, c'est le roi des dieux grecs."),
+             ("la capitale de la France", "La capitale de la France, c'est Paris.")] * 20
+    tau, _ = net.calibrate_abstention(clean, target_error=0.2, confidence=0.9)
+    assert tau <= 1.0 and net.match("qui est Zeus") is not None

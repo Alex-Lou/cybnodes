@@ -27,4 +27,4 @@ __all__ = [
     "CybNodes", "Network", "Manifest", "Result", "Router", "Weaver", "Persona", "Memory",
     "SemanticNetwork", "HybridNetwork", "cosine", "Embedder", "SemanticCache",
 ]
-__version__ = "0.6.0"
+__version__ = "0.7.0"
