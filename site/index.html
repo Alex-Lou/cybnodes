@@ -189,7 +189,7 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
             <circle r="4.5" class="dot"><animateMotion dur="4.6s" repeatCount="indefinite" path="M170 28 V89 L170 170 L170 288 L170 402"/></circle>
             <circle r="4.5" class="dot" opacity=".65"><animateMotion dur="4.6s" begin="2.3s" repeatCount="indefinite" path="M170 28 V89 L170 170 L170 288 L170 402"/></circle>
           </svg>
-          <p class="flow__cap" data-i18n="flow.cap">La question entre, le <strong>routeur</strong> interroge les réseaux, l'un répond — ou aucun. Le <strong>tisseur</strong> le redit dans la voix du modèle, et la réponse ressort, vérifiable.</p>
+          <p class="flow__cap" data-i18n="flow.cap">La question entre, le <strong>routeur</strong> interroge les réseaux, l'un répond - ou aucun. Le <strong>tisseur</strong> le redit dans la voix du modèle, et la réponse ressort, vérifiable.</p>
         </div>
         <div class="arch reveal">
           <div class="layer"><span class="layer__n">1</span><div><strong data-i18n="arch.l1t">Le Conducteur</strong><span data-i18n="arch.l1s">ton modèle, sa voix, sa personnalité</span></div></div>
@@ -210,7 +210,7 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
       <div class="container">
         <div class="head reveal">
           <p class="section__eyebrow" data-i18n="net.eyebrow">// les réseaux livrés</p>
-          <h2 data-i18n="net.h2">Trois <span class="grad">circuits</span>, prêts à brancher</h2>
+          <h2 data-i18n="net.h2">Les <span class="grad">circuits</span>, prêts à brancher</h2>
           <p class="section__lead" data-i18n="net.lead">Règle commune : un réseau se tait dès qu'il doute. Les réseaux déterministes (calcul) rendent la main net ; les réseaux flous (savoir, web) notent leur confiance, et le routeur les écarte sous le seuil. Résultat : la réponse n'est jamais bancale, c'est le modèle qui reprend dans le doute.</p>
         </div>
         <div class="grid grid--3">
@@ -231,6 +231,18 @@ cyb.<span class="tok-fn">ask</span>(<span class="tok-str">"write a haiku"</span>
             <span class="card__tag">WebNetwork</span>
             <h3 data-i18n="net.web.h">Recherche web</h3>
             <p data-i18n="net.web.p">Actualité via l'API Brave Search, avec la source citée. Honnête : "j'ai cherché et…". Se tait proprement sans clé.</p>
+          </article>
+          <article class="card reveal" data-delay="4">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4H4z"/><path d="M4 11h16M4 15h10M4 19h7"/></svg>
+            <span class="card__tag">RecallNetwork</span>
+            <h3 data-i18n="net.recall.h">Rappel qui récite</h3>
+            <p data-i18n="net.recall.p">Récite une réponse déjà validée (jamais reformulée, donc zéro hallucination), tolère les fautes de frappe, et calibre lui-même son seuil d'abstention (0.7.0) : "ne pas dépasser tel taux d'erreur" devient une garantie mesurable, pas un espoir.</p>
+          </article>
+          <article class="card reveal" data-delay="5">
+            <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span class="card__tag">GroundingGate</span>
+            <h3 data-i18n="net.ground.h">Ancrage avant de servir</h3>
+            <p data-i18n="net.ground.p">Enveloppe un réseau et vérifie l'ancrage avant de répondre : si des golds proches se contredisent, il s'abstient. Il n'ôte que le douteux, n'invente rien, fail-safe.</p>
           </article>
         </div>
       </div>
